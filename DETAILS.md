@@ -1,0 +1,1 @@
+This solution provides a flexible, robust, and scalable way to manage open and closed hours for Twilio Flex applications.
