@@ -40,9 +40,9 @@ twilio plugins:install @twilio-labs/plugin-serverless
 First, clone the repository, change to its directory, and install:
 
 ```bash
-git clone https://github.com/twilio-professional-services/flex-schedule-manager.git
+git clone https://github.com/twilio/flex-schedule-manager-plugin
 
-cd flex-schedule-manager
+cd flex-schedule-manager-plugin
 cd serverless
 npm install
 ```
@@ -84,18 +84,6 @@ Content-Type: application/json
     }
   }
 }
-```
-
-Next, switch to the Flex plugin directory:
-
-Flex UI version 1.x 
-```bash
-cd ../plugin-schedule-manager-v1
-```
-
-Flex UI version 2.x
-```bash
-cd ../plugin-schedule-manager-v2
 ```
 
 Copy `public/appConfig.example.js` to `public/appConfig.js`:
