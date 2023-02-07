@@ -3,11 +3,11 @@ export interface Rule {
   name: string;
   isOpen: boolean;
   closedReason: string;
-  dateRRule?: string;
-  startDate?: string;
-  endDate?: string;
-  startTime?: string;
-  endTime?: string;
+  dateRRule: string;
+  startDate: string;
+  endDate: string;
+  startTime: string;
+  endTime: string;
 }
 
 export interface Schedule {

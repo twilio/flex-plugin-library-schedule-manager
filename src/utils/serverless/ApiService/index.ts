@@ -13,10 +13,24 @@ export default abstract class ApiService {
 
   protected manager = Flex.Manager.getInstance();
   readonly serverlessDomain: string;
+  readonly serverlessProtocol: string;
 
   constructor() {
-    const { schedule_manager: custom_data } = this.manager.serviceConfiguration.ui_attributes as UIAttributes;
-    this.serverlessDomain = custom_data.serverless_functions_domain;
+        // use serverless_functions_domain from .env
+
+        this.serverlessProtocol = "https";
+        this.serverlessDomain = "";
+        debugger;
+    
+        try {
+          if (process.env?.FLEX_APP_SERVERLESS_FUNCTONS_DOMAIN)
+          this.serverlessDomain = process.env?.FLEX_APP_SERVERLESS_FUNCTONS_DOMAIN;
+    
+        if (!this.serverlessDomain)
+          throw Error("serverless_functions_domain is not set env file");
+        } catch (e) {
+          console.error(e);
+        }
   }
 
   protected buildBody(encodedParams: EncodedParams): string {
