@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ColumnDefinition, DataTable } from '@twilio/flex-ui';
 import { Button } from '@twilio-paste/core/button';
 import { Box } from '@twilio-paste/core/box';
-import { PlusIcon } from "@twilio-paste/icons/esm/PlusIcon";
+import { PlusIcon } from "@twilio-paste/icons/cjs/PlusIcon";
 
 import ScheduleEditor from '../ScheduleEditor/ScheduleEditor';
 import { Rule, Schedule } from '../../types/schedule-manager';

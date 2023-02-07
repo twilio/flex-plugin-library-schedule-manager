@@ -11,9 +11,9 @@ import { HelpText } from '@twilio-paste/core/help-text';
 import { Input } from '@twilio-paste/core/input';
 import { Label } from '@twilio-paste/core/label';
 import { Stack } from '@twilio-paste/core/stack';
-import { ChevronDownIcon } from "@twilio-paste/icons/esm/ChevronDownIcon";
-import { ChevronUpIcon } from "@twilio-paste/icons/esm/ChevronUpIcon";
-import { DeleteIcon } from "@twilio-paste/icons/esm/DeleteIcon";
+import { ChevronDownIcon } from "@twilio-paste/icons/cjs/ChevronDownIcon";
+import { ChevronUpIcon } from "@twilio-paste/icons/cjs/ChevronUpIcon";
+import { DeleteIcon } from "@twilio-paste/icons/cjs/DeleteIcon";
 
 import { isScheduleUnique, updateScheduleData } from '../../utils/schedule-manager';
 import { Schedule, Rule } from '../../types/schedule-manager';

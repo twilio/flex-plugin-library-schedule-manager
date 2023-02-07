@@ -21,6 +21,7 @@ export const canShowScheduleManager = (manager: Manager) => {
 }
 
 export const loadScheduleData = async (): Promise<ScheduleManagerConfig | null> => {
+  console.log("CALLED");
   const listSchedulesResponse = await ScheduleManagerService.list();
   
   if (listSchedulesResponse) {

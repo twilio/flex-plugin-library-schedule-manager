@@ -6,7 +6,7 @@ import { Modal, ModalBody } from '@twilio-paste/core/modal';
 import { Spinner } from '@twilio-paste/core/spinner';
 import { Stack } from '@twilio-paste/core/stack';
 import { Text } from '@twilio-paste/core/text';
-import { UploadToCloudIcon } from "@twilio-paste/icons/esm/UploadToCloudIcon";
+import { UploadToCloudIcon } from "@twilio-paste/icons/cjs/UploadToCloudIcon";
 
 import { PublishModalContent, ScheduleViewWrapper, ScheduleViewHeader } from './ScheduleViewStyles';
 
@@ -79,7 +79,7 @@ const ScheduleView = ({}) => {
   return (
     <ScheduleViewWrapper>
       <ScheduleViewHeader>
-        <Heading as="h3" variant="heading30" marginBottom='space0'>
+        <Heading as="h3" variant="heading30" marginBottom='space0' data-testid="schedule-manager-title">
           {ScheduleManagerStrings[StringTemplates.SCHEDULE_MANAGER_TITLE]}
         </Heading>
         <Stack orientation='horizontal' spacing='space30'>
