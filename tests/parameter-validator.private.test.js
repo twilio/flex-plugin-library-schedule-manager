@@ -1,4 +1,4 @@
-import ParameterValidator from "../parameter-validator.private";
+import ParameterValidator from "../functions/common/helpers/parameter-validator.private";
 
 const functionPath = "mockFunctionPath";
 

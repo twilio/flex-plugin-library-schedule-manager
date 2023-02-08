@@ -1,31 +1,30 @@
 {
-  "name": "plugin-schedule-manager",
-  "version": "1.0.0",
+  "name": "schedule-manager",
+  "version": "0.0.0",
   "private": true,
   "scripts": {
-    "postinstall": "flex-plugin pre-script-check",
-    "test": "jest",
-    "start": "twilio flex:plugins:start"
+    "test": "cd ui-src; jest",
+    "start": "twilio-run",
+    "deploy": "twilio-run deploy",
+    "serverless:deploy": "twilio serverless:deploy"
   },
   "dependencies": {
-    "@twilio-paste/core": "^15.3.0",
-    "@twilio-paste/icons": "^9.2.0",
-    "@twilio/flex-plugin-scripts": "6.0.2",
-    "jest-fetch-mock": "^3.0.3",
-    "jest-junit": "^15.0.0",
-    "prop-types": "^15.7.2",
+    "@twilio/runtime-handler": "1.2.3",
+    "axios": "^0.27.2",
+    "form-data": "^4.0.0",
+    "jest": "^29.4.2",
+    "lodash": "^4.17.21",
+    "luxon": "^3.0.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "rrule": "^2.7.1",
-    "tzdata": "^1.0.32"
+    "twilio": "^3.56",
+    "twilio-flex-token-validator": "^1.5.6"
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^12.0.0",
-    "@twilio/flex-ui": "^2",
-    "@types/uuid": "^8.3.4",
-    "jest": "^26.6.3",
-    "react-test-renderer": "17.0.2",
-    "typescript": "^4"
+    "twilio-run": "^3.4.2"
+  },
+  "engines": {
+    "node": "14"
   }
 }
