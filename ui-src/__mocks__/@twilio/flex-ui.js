@@ -168,11 +168,11 @@ module.exports = {
     NotificationBar: {
         Action: () => <React.Fragment></React.Fragment>,
     },
-    SideLink: () => ({
+    SideLink: class SideLink extends React.Component {
         render() {
             return <React.Fragment />;
-        },
-    }),
+        }
+    },
     Icon: () => ({
         render() {
             return <React.Fragment />;
@@ -203,6 +203,21 @@ module.exports = {
             return <React.Fragment />;
         },
     }),
+    ColumnDefinition: class ColumnDefinition extends React.Component {
+        render() {
+            return <React.Fragment />;
+        }
+    },
+    DataTable: class DataTable extends React.Component {
+        render() {
+            return <React.Fragment />;
+        }
+    },
+    SidePanel: class SidePanel extends React.Component {
+        render() {
+            return <React.Fragment />;
+        }
+    },
     ConferenceParticipant: ConferenceParticipant,
     withTaskContext: (WrappedComponent) => {
         return () => ({

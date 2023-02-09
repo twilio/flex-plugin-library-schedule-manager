@@ -1,0 +1,51 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<ScheduleDataTable> should render component 1`] = `
+<div
+  id="schedule-data-table-root"
+>
+  <div
+    className="css-sb3wa1"
+    data-paste-element="BOX"
+  >
+    <button
+      aria-busy="false"
+      className="css-175kaqp"
+      data-paste-element="BUTTON"
+      disabled={false}
+      onClick={[Function]}
+      onMouseEnter={[Function]}
+      onMouseLeave={[Function]}
+      type="button"
+    >
+      <span
+        className="css-z6jp9v"
+        data-paste-element="BOX"
+      >
+        <span
+          className="css-144s81u"
+          data-paste-element="ICON"
+          size="sizeIcon30"
+        >
+          <svg
+            aria-hidden={true}
+            aria-labelledby="PlusIcon-1"
+            height="100%"
+            role="img"
+            viewBox="0 0 20 20"
+            width="100%"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M15.043 9.043h-4.086V4.957a.958.958 0 00-1.914 0v4.086H4.957a.958.958 0 000 1.914h4.086v4.086a.958.958 0 001.914 0v-4.086h4.086a.958.958 0 000-1.914z"
+              fill="currentColor"
+              fillRule="evenodd"
+            />
+          </svg>
+        </span>
+        Create Schedule
+      </span>
+    </button>
+  </div>
+</div>
+`;
