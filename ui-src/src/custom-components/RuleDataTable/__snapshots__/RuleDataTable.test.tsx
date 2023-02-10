@@ -1,6 +1,6 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
-import RuleDataTable from './RuleDataTable';
+import RuleDataTable from '../RuleDataTable';
 const renderTree = tree => renderer.create(tree);
 describe('<RuleDataTable>', () => {
   it('should render component', () => {

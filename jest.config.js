@@ -1,4 +1,6 @@
 module.exports = {
+  rootDir: '.',
+  testEnvironment: "jsdom",
   clearMocks: true,
   setupFilesAfterEnv: [
     "<rootDir>/setupTests.js"
