@@ -128,6 +128,7 @@ const RuleDataTable = (props: OwnProps) => {
         <Box padding='space60'>
           <Button
             variant="primary"
+            data-testid="create-rule-btn"
             disabled={props.isLoading}
             onClick={createRuleClick}>
             <PlusIcon decorative />
