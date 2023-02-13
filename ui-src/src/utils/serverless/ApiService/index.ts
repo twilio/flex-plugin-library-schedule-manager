@@ -20,7 +20,6 @@ export default abstract class ApiService {
 
         this.serverlessProtocol = "https";
         this.serverlessDomain = "";
-        debugger;
     
         try {
           if (process.env?.FLEX_APP_SERVERLESS_FUNCTONS_DOMAIN)
