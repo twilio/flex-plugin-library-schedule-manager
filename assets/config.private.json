@@ -102,6 +102,7 @@
         "61703be8-412c-4bd5-8a6b-afe7e9ecb304",
         "51800893-7050-413d-a692-201e3d0161b6"
       ]
-    }
+    },
+    { "name": "ExampleTwo", "manualClose": true }
   ]
 }
