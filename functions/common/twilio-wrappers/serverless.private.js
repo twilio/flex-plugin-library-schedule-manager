@@ -30,7 +30,7 @@ exports.deployBuild = async function (parameters) {
     
     const envSid = context.ENVIRONMENT_SID;
     const serviceSid = context.SERVICE_SID;
-    
+
     const deployment = await client.serverless.v1.services(serviceSid).environments(envSid).deployments.create({ buildSid });
 
     return { success: true, status: 200, deploymentSid: deployment.sid };

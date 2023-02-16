@@ -38,7 +38,6 @@ exports.handler = TokenValidator(async function publish(context, event, callback
     response.setStatusCode(result.status);
     response.setBody(result)
   } catch (error) {
-    console.log(error);
     
     response.setStatusCode(500);
     response.setBody({ message: error.message });
