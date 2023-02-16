@@ -6,7 +6,8 @@
     "preinstall": "cd ./ui-src && npm install",
     "test": "jest",
     "build": "cd ui-src && twilio flex:plugins:build && cp build/** ../assets",
-    "deploy": "twilio flex:plugins:deploy"
+    "deploy": "twilio flex:plugins:deploy",
+    "lint": "eslint --ignore-path .gitignore --ext .js,.ts ."
   },
   "dependencies": {
     "@twilio/runtime-handler": "1.2.3",
@@ -25,13 +26,18 @@
     "@babel/preset-env": "7.20.2",
     "@babel/preset-react": "7.18.6",
     "@babel/preset-typescript": "^7.12.1",
+    "@emotion/styled": "^11.10.5",
     "@types/jest": "^29.4.0",
+    "@typescript-eslint/eslint-plugin": "^5.52.0",
+    "@typescript-eslint/parser": "^5.52.0",
+    "eslint": "^8.34.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-prettier": "^4.2.1",
     "jest-environment-jsdom": "^29.4.2",
     "jest-fetch-mock": "^3.0.3",
-    "twilio-run": "^3.4.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "@emotion/styled": "^11.10.5"
+    "twilio-run": "^3.4.2"
   },
   "engines": {
     "node": "14"
