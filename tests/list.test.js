@@ -1,5 +1,5 @@
 import helpers from './test-utils/test-helper';
-describe('Token Validator', () => {
+describe('List Function', () => {
   const context = {
     SERVICE_SID: 'testServiceSid',
     getTwilioClient: jest.fn().mockReturnValue({
@@ -29,6 +29,10 @@ describe('Token Validator', () => {
 
   const mockFunctionValidatorObject = jest.fn();
 
+  afterEach(() => {
+    jest.resetModules();
+  });
+
   beforeAll(() => {
     helpers.setup();
     global.Runtime._addFunction(
@@ -50,6 +54,46 @@ describe('Token Validator', () => {
         functionValidator: mockFunctionValidatorObject,
       };
     });
+  });
+
+  test('fetchLatestBuild result fail', async () => {
+    mockFunctionValidatorObject.mockImplementation((fn) => {
+      return fn;
+    });
+    jest.mock('../functions/common/twilio-wrappers/serverless.private', () => ({
+      __esModule: true,
+      fetchLatestBuild: () => {
+        return {
+          success: false,
+          status: 404,
+          message: 'No build found',
+        };
+      },
+      fetchLatestDeployment: () => {
+        return {
+          success: true,
+          status: 200,
+          latestDeployment: {
+            path: '/config.json',
+            buildSid: 'ConfigSID',
+          },
+        };
+      },
+    }));
+    const List = require('../functions/admin/list');
+    const event = {};
+    const callback = jest.fn();
+    const response = new Twilio.Response();
+    response.appendHeader('Access-Control-Allow-Origin', '*');
+    response.appendHeader('Access-Control-Allow-Methods', 'OPTIONS GET');
+    response.appendHeader('Content-Type', 'application/json');
+    response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
+    response.setStatusCode(404);
+    const expected = response;
+
+    await List.handler(context, event, callback);
+    expect(callback.mock.calls[0][1]._statusCode).toEqual(expected._statusCode);
+    expect(callback.mock.calls[0][1]._body.message).toEqual('No build found');
   });
 
   test('should return details successfully', async () => {
