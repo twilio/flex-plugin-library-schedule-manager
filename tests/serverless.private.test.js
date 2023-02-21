@@ -41,7 +41,6 @@ const fetchBuildStatusTwilioClient = {
   },
 };
 const fetchLatestBuildTwilioClient = {
-  // client.serverless.v1.services(serviceSid).builds.list({ limit: 1 });
   serverless: {
     v1: {
       services: () => {
@@ -69,6 +68,10 @@ describe('Test functions in serverless', () => {
         'common/twilio-wrappers/retry-handler',
         './functions/common/twilio-wrappers/retry-handler.private.js',
       );
+      jest.mock('../functions/common/twilio-wrappers/retry-handler.private', () => ({
+        __esModule: true,
+        retryHandler: () => {},
+      }));
     });
     const validParams = {
       scriptName: 'testScript',
@@ -104,6 +107,46 @@ describe('Test functions in serverless', () => {
       const Serverless = require('../functions/common/twilio-wrappers/serverless.private');
       await expect(Serverless.deployBuild(invalidParams)).rejects;
     });
+
+    test('should throw an error when given invalid parameters - scriptName', async () => {
+      const Serverless = require('../functions/common/twilio-wrappers/serverless.private');
+      await expect(
+        Serverless.deployBuild({
+          ...invalidParams,
+          scriptName: 12,
+        }),
+      ).rejects;
+    });
+
+    test('should throw an error when given invalid parameters - attempts', async () => {
+      const Serverless = require('../functions/common/twilio-wrappers/serverless.private');
+      await expect(
+        Serverless.deployBuild({
+          ...invalidParams,
+          attempts: 'hello',
+        }),
+      ).rejects;
+    });
+
+    test('should throw an error when given invalid parameters - context', async () => {
+      const Serverless = require('../functions/common/twilio-wrappers/serverless.private');
+      await expect(
+        Serverless.deployBuild({
+          ...invalidParams,
+          context: 'hello',
+        }),
+      ).rejects;
+    });
+
+    test('should throw an error when given invalid parameters - buildSid', async () => {
+      const Serverless = require('../functions/common/twilio-wrappers/serverless.private');
+      await expect(
+        Serverless.deployBuild({
+          ...invalidParams,
+          buildSid: 12,
+        }),
+      ).rejects;
+    });
   });
 });
 
@@ -115,6 +158,10 @@ describe('fetchBuildStatus()', () => {
       './functions/common/twilio-wrappers/retry-handler.private.js',
     );
   });
+  jest.mock('../functions/common/twilio-wrappers/retry-handler.private', () => ({
+    __esModule: true,
+    retryHandler: () => {},
+  }));
   const validParams = {
     scriptName: 'testScript',
     attempts: 1,
@@ -151,6 +198,36 @@ describe('fetchBuildStatus()', () => {
       'Invalid parameters object passed. Parameters must contain scriptName of calling function',
     );
   });
+
+  test('should throw an error when given invalid parameters - attempts', async () => {
+    const Serverless = require('../functions/common/twilio-wrappers/serverless.private');
+    await expect(
+      Serverless.fetchBuildStatus({
+        ...invalidParams,
+        attempts: 'hello',
+      }),
+    ).rejects;
+  });
+
+  test('should throw an error when given invalid parameters - context', async () => {
+    const Serverless = require('../functions/common/twilio-wrappers/serverless.private');
+    await expect(
+      Serverless.fetchBuildStatus({
+        ...invalidParams,
+        context: 'hello',
+      }),
+    ).rejects;
+  });
+
+  test('should throw an error when given invalid parameters - buildSid', async () => {
+    const Serverless = require('../functions/common/twilio-wrappers/serverless.private');
+    await expect(
+      Serverless.fetchBuildStatus({
+        ...invalidParams,
+        buildSid: 12,
+      }),
+    ).rejects;
+  });
 });
 
 describe('fetchLatestBuild()', () => {
@@ -160,6 +237,10 @@ describe('fetchLatestBuild()', () => {
       'common/twilio-wrappers/retry-handler',
       './functions/common/twilio-wrappers/retry-handler.private.js',
     );
+    jest.mock('../functions/common/twilio-wrappers/retry-handler.private', () => ({
+      __esModule: true,
+      retryHandler: () => {},
+    }));
   });
   const validParams = {
     scriptName: 'testScript',
@@ -203,13 +284,17 @@ describe('fetchLatestBuild()', () => {
   });
 });
 
-describe('fetchLatestDeployment', () => {
+describe('fetchLatestDeployment()', () => {
   beforeAll(() => {
     helpers.setup();
     global.Runtime._addFunction(
       'common/twilio-wrappers/retry-handler',
       './functions/common/twilio-wrappers/retry-handler.private.js',
     );
+    jest.mock('../functions/common/twilio-wrappers/retry-handler.private', () => ({
+      __esModule: true,
+      retryHandler: () => {},
+    }));
   });
   const context = {
     getTwilioClient: jest.fn().mockReturnValue({
