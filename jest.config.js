@@ -1,10 +1,8 @@
 module.exports = {
   rootDir: '.',
-  testEnvironment: "jsdom",
+  testEnvironment: 'jsdom',
   clearMocks: true,
-  setupFilesAfterEnv: [
-    "<rootDir>/setupTests.js"
-  ],
+  setupFilesAfterEnv: ['<rootDir>/setupTests.js'],
   coveragePathIgnorePatterns: [
     '.*\\.d\\.ts',
     'index\\.ts',
@@ -16,11 +14,9 @@ module.exports = {
     './public',
     '/test-utils',
     '/types',
+    // Ignore coverage for ui
+    'ui-src',
   ],
-  "roots": [
-    "<rootDir>"
-  ],
-  "modulePaths": [
-    "<rootDir>"
-  ],
-}
+  roots: ['<rootDir>'],
+  modulePaths: ['<rootDir>'],
+};
