@@ -23,7 +23,9 @@
     "@twilio/flex-ui": "^2",
     "@types/uuid": "^8.3.4",
     "react-test-renderer": "17.0.2",
-    "typescript": "^4"
+    "typescript": "^4",
+    "twilio-cli": "5.2.1",
+    "twilio-run": "3.4.2"
   },
   "jest-junit": {
     "outputDirectory": "./test-results"
