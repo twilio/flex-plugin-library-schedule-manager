@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "postinstall": "flex-plugin pre-script-check",
     "start": "twilio flex:plugins:start",
     "prestart": "npm run bootstrap"
   },
