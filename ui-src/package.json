@@ -1,5 +1,5 @@
 {
-  "name": "flex-schedule-manager-plugin",
+  "name": "flex-plugin-library-schedule-manager",
   "version": "1.0.0",
   "private": true,
   "scripts": {
