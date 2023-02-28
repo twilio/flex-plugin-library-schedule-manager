@@ -1,22 +1,12 @@
 import * as Flex from '@twilio/flex-ui';
-import { UIAttributes } from '../ui-src/src/types/ServiceConfiguration';
 import { mergeWith, unset } from 'lodash';
 
 // NOTE: Not sure a great way to "set" the Flex serviceConfiguration value per test
 //       So the __mocks__/@twilio/flex-ui.js file will use this variable as value
 //       And tests can use these functions to set value (will automatically get reset after each test)
 
-interface ServiceConfiguration extends Flex.ServiceConfiguration {
-  ui_attributes: UIAttributes;
-}
 
-// Create an interface so we can set ui_attributes with our custom data and intellisense
-// Make ui_attributes Partial for ease of testing code (only provide what you need in test)
-interface ServiceConfigurationUpdate extends Flex.ServiceConfiguration {
-  ui_attributes: Partial<UIAttributes>;
-}
-
-let mockedServiceConfiguration: ServiceConfiguration = {
+let mockedServiceConfiguration = {
   account_sid: 'mockAccountSid',
   attributes: {},
   call_recording_enabled: false,
@@ -67,7 +57,7 @@ let mockedServiceConfiguration: ServiceConfiguration = {
   ui_dependencies: {},
 };
 
-export const getMockedServiceConfiguration = () => mockedServiceConfiguration as Flex.ServiceConfiguration;
+export const getMockedServiceConfiguration = () => mockedServiceConfiguration;
 export const resetServiceConfiguration = () => {
   mockedServiceConfiguration = {
     account_sid: 'mockAccountSid',
@@ -119,7 +109,7 @@ export const resetServiceConfiguration = () => {
     ui_dependencies: {},
   };
 };
-export const setServiceConfiguration = (serviceConfiguration: Partial<ServiceConfigurationUpdate>) => {
+export const setServiceConfiguration = (serviceConfiguration) => {
   mergeWith(mockedServiceConfiguration, serviceConfiguration, (objValue, srcValue, key, obj) => {
     if (srcValue === undefined) {
       unset(obj, key);

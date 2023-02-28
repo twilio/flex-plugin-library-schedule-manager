@@ -1,3 +1,5 @@
+NOTE: This repo is still a WIP (Work In Progress) and the codebase is not yet production ready.
+
 # Twilio Flex Schedule Manager
 
 This solution provides a flexible, robust, and scalable way to manage open and closed hours for Twilio Flex applications.
@@ -147,6 +149,7 @@ The schedule's rules will then be evaluated against the current date and time. T
 - If no rules match, the schedule is closed, and the closed reason provided is `closed`.
 
 Here is an example response from a closed schedule:
+
 ```
 {
   "isOpen": false,
@@ -155,6 +158,7 @@ Here is an example response from a closed schedule:
 ```
 
 Here is an example response from an open schedule:
+
 ```
 {
   "isOpen": true,
@@ -231,4 +235,3 @@ The Flex plugin loads the configuration interface for workers with the `admin` r
 ## Development
 
 Run `twilio flex:plugins --help` to see all the commands we currently support. For further details on Flex Plugins refer to our documentation on the [Twilio Docs](https://www.twilio.com/docs/flex/developer/plugins/cli) page.
-

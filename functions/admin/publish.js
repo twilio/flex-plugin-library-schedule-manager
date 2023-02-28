@@ -3,7 +3,7 @@ const ParameterValidator = require(Runtime.getFunctions()['common/helpers/parame
 const ServerlessOperations = require(Runtime.getFunctions()['common/twilio-wrappers/serverless'].path);
 
 exports.handler = TokenValidator(async function publish(context, event, callback) {
-  const scriptName = arguments.callee.name;
+  const scriptName = publish.name;
   const response = new Twilio.Response();
   response.appendHeader('Access-Control-Allow-Origin', '*');
   response.appendHeader('Access-Control-Allow-Methods', 'OPTIONS POST');
@@ -38,7 +38,6 @@ exports.handler = TokenValidator(async function publish(context, event, callback
     response.setStatusCode(result.status);
     response.setBody(result)
   } catch (error) {
-    console.log(error);
     
     response.setStatusCode(500);
     response.setBody({ message: error.message });
