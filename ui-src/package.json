@@ -24,7 +24,8 @@
     "react-test-renderer": "17.0.2",
     "typescript": "^4",
     "twilio-cli": "5.2.1",
-    "twilio-run": "3.4.2"
+    "twilio-run": "3.4.2",
+    "@emotion/styled": "11.10.5"
   },
   "jest-junit": {
     "outputDirectory": "./test-results"
