@@ -42,7 +42,7 @@ export class FlexPluginError extends Error {
 class ErrorManagerImpl {
   public processError(error: FlexPluginError, showNotification: boolean): FlexPluginError {
     try {
-      console.log(`Schedule Manager Plugin: ${error}\nType: ${error.content.type}\nContext:${error.content.context}`);
+      console.log(`Schedule Manager Plugin: ${error}\nType: ${error.content.type}\n Context:${error.content.context}`);
       if (showNotification) {
       }
     } catch (e) {
