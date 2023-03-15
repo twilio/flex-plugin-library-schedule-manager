@@ -11,6 +11,7 @@
   "dependencies": {
     "@twilio-labs/runtime-helpers": "^0.1.2",
     "@twilio-labs/serverless-api": "^5.5.0",
+    "@twilio-labs/serverless-runtime-types": "^2.2.3",
     "@twilio/runtime-handler": "1.2.3",
     "axios": "^0.27.2",
     "form-data": "^4.0.0",
@@ -28,6 +29,10 @@
     "@babel/preset-typescript": "^7.12.1",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.5",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^12.0.0",
+    "@twilio-paste/core": "^15.3.0",
+    "@twilio-paste/icons": "^9.2.0",
     "@types/jest": "^29.4.0",
     "@typescript-eslint/eslint-plugin": "^5.52.0",
     "@typescript-eslint/parser": "^5.52.0",
@@ -39,13 +44,9 @@
     "jest-fetch-mock": "^3.0.3",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "twilio-run": "^3.4.2",
     "react-test-renderer": "17.0.2",
-    "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^12.0.0",
-    "@twilio-paste/core": "^15.3.0",
-    "@twilio-paste/icons": "^9.2.0",
     "rrule": "^2.7.1",
+    "twilio-run": "^3.4.2",
     "tzdata": "^1.0.32"
   },
   "engines": {
