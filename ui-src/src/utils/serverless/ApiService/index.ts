@@ -1,35 +1,32 @@
 import * as Flex from '@twilio/flex-ui';
 import { EncodedParams } from '../../../types/serverless';
-import { UIAttributes } from '../../../types/manager/ServiceConfiguration';
-import { random }  from 'lodash'
-
+import { random } from 'lodash';
+import { ErrorManager, FlexPluginErrorType } from '../../../ErrorManager';
 
 function delay<T>(ms: number, result?: T) {
-  return new Promise(resolve => setTimeout(() => resolve(result), ms));
+  return new Promise((resolve) => setTimeout(() => resolve(result), ms));
 }
 
-
 export default abstract class ApiService {
-
   protected manager = Flex.Manager.getInstance();
   readonly serverlessDomain: string;
-  readonly serverlessProtocol: string;
 
   constructor() {
-        // use serverless_functions_domain from .env
+    this.serverlessDomain = '';
 
-        this.serverlessProtocol = "https";
-        this.serverlessDomain = "";
-    
-        try {
-          if (process.env?.FLEX_APP_SERVERLESS_FUNCTONS_DOMAIN)
-          this.serverlessDomain = process.env?.FLEX_APP_SERVERLESS_FUNCTONS_DOMAIN;
-    
-        if (!this.serverlessDomain)
-          throw Error("serverless_functions_domain is not set env file");
-        } catch (e) {
-          console.error(e);
-        }
+    try {
+      this.serverlessDomain =
+        process.env.FLEX_APP_SERVERLESS_FUNCTONS_DOMAIN || '<FLEX_APP_SERVERLESS_FUNCTONS_DOMAIN>';
+
+      if (!this.serverlessDomain) throw Error('serverless_functions_domain is not set');
+    } catch (e) {
+      ErrorManager.createAndProcessError('Could not set serverless function domain', {
+        type: FlexPluginErrorType.serverless,
+        description: e instanceof Error ? `${e.message}` : 'Could not set serverless function domain',
+        context: 'Plugin.ApiService',
+        wrappedError: e,
+      });
+    }
   }
 
   protected buildBody(encodedParams: EncodedParams): string {
@@ -46,7 +43,7 @@ export default abstract class ApiService {
 
   protected fetchJsonWithReject<T>(url: string, config: RequestInit, attempts = 0): Promise<T> {
     return fetch(url, config)
-      .then(response => {
+      .then((response) => {
         if (!response.ok) {
           throw response;
         }
@@ -59,7 +56,7 @@ export default abstract class ApiService {
           // Generic retry when calls return a 'too many requests' response
           // request is delayed by a random number which grows with the number of retries
           if (error.status === 429 && attempts < 10) {
-            await delay(random(100, 750) + (attempts * 100));
+            await delay(random(100, 750) + attempts * 100);
             return await this.fetchJsonWithReject<T>(url, config, attempts + 1);
           }
           return error.json().then((response: any) => {
