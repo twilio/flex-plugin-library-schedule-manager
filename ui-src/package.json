@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "twilio flex:plugins:start",
-    "prestart": "npm run bootstrap"
+    "start": "twilio flex:plugins:start"
   },
   "dependencies": {
     "@twilio-paste/core": "^15.3.0",
