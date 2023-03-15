@@ -1,6 +1,7 @@
 import * as Flex from '@twilio/flex-ui';
 import { EncodedParams } from '../../../types/serverless';
 import { random } from 'lodash';
+import { ErrorManager, FlexPluginErrorType } from 'ErrorManager';
 
 function delay<T>(ms: number, result?: T) {
   return new Promise((resolve) => setTimeout(() => resolve(result), ms));
@@ -9,12 +10,23 @@ function delay<T>(ms: number, result?: T) {
 export default abstract class ApiService {
   protected manager = Flex.Manager.getInstance();
   readonly serverlessDomain: string;
-  readonly serverlessProtocol: string;
 
   constructor() {
-    this.serverlessProtocol = 'https';
+    this.serverlessDomain = '';
 
-    this.serverlessDomain = process.env.FLEX_APP_SERVERLESS_FUNCTONS_DOMAIN || '<FLEX_APP_SERVERLESS_FUNCTONS_DOMAIN>';
+    try {
+      this.serverlessDomain =
+        process.env.FLEX_APP_SERVERLESS_FUNCTONS_DOMAIN || '<FLEX_APP_SERVERLESS_FUNCTONS_DOMAIN>';
+
+      if (!this.serverlessDomain) throw Error('serverless_functions_domain is not set');
+    } catch (e) {
+      ErrorManager.createAndProcessError('Could not set serverless function domain', {
+        type: FlexPluginErrorType.serverless,
+        description: e instanceof Error ? `${e.message}` : 'Could not set serverless function domain',
+        context: 'Plugin.ApiService',
+        wrappedError: e,
+      });
+    }
   }
 
   protected buildBody(encodedParams: EncodedParams): string {
