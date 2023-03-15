@@ -727,7 +727,7 @@ const RuleEditor = (props: OwnProps) => {
             )
           }
           <Stack orientation='horizontal' spacing='space30'>
-            <Button variant='primary' onClick={handleSave}>
+            <Button variant='primary' onClick={handleSave} data-testid='save-rule-btn'>
               {ScheduleManagerStrings[StringTemplates.SAVE_BUTTON]}
             </Button>
             <Button variant='secondary' onClick={handleCopy}>
@@ -735,7 +735,7 @@ const RuleEditor = (props: OwnProps) => {
             </Button>
             {
               props.selectedRule !== null && (
-                <Button variant='destructive_secondary' onClick={handleDelete}>
+                <Button variant='destructive_secondary' onClick={handleDelete} data-testid='delete-rule-btn'>
                   {ScheduleManagerStrings[StringTemplates.DELETE_BUTTON]}
                 </Button>
               )

@@ -237,10 +237,12 @@ const ScheduleEditor = (props: OwnProps) => {
               type="text"
               value={name}
               onChange={handleChangeName}
+              data-testid="schedule-editor-name"
               required />
           </>
           <Combobox
             autocomplete
+            data-testid="schedule-editor-timezone"
             items={filteredTimeZones}
             labelText={ScheduleManagerStrings[StringTemplates.TIMEZONE]}
             selectedItem={timeZone}
@@ -303,10 +305,10 @@ const ScheduleEditor = (props: OwnProps) => {
             )
           }
           <Stack orientation='horizontal' spacing='space30'>
-            <Button variant='primary' onClick={handleSave}>
+            <Button variant='primary' onClick={handleSave} data-testid='save-button'>
               {ScheduleManagerStrings[StringTemplates.SAVE_BUTTON]}
             </Button>
-            <Button variant='secondary' onClick={handleCopy}>
+            <Button variant='secondary' onClick={handleCopy} data-testid='save-copy-button'>
               {ScheduleManagerStrings[StringTemplates.SAVE_COPY_BUTTON]}
             </Button>
             {
