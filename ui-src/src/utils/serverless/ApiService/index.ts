@@ -1,7 +1,7 @@
 import * as Flex from '@twilio/flex-ui';
 import { EncodedParams } from '../../../types/serverless';
 import { random } from 'lodash';
-import { ErrorManager, FlexPluginErrorType } from 'ErrorManager';
+import { ErrorManager, FlexPluginErrorType } from '../../../ErrorManager';
 
 function delay<T>(ms: number, result?: T) {
   return new Promise((resolve) => setTimeout(() => resolve(result), ms));
