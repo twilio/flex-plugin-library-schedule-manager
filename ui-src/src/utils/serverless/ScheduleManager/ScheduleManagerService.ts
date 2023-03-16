@@ -1,10 +1,15 @@
 import * as Flex from '@twilio/flex-ui';
-import { ScheduleManagerConfig, UpdateConfigResponse, UpdateConfigStatusResponse, PublishConfigRequest, PublishConfigResponse } from '../../../types/schedule-manager';
+import {
+  ScheduleManagerConfig,
+  UpdateConfigResponse,
+  UpdateConfigStatusResponse,
+  PublishConfigRequest,
+  PublishConfigResponse,
+} from '../../../types/schedule-manager';
 import { EncodedParams } from '../../../types/serverless';
 import ApiService from '../ApiService';
 
 class ScheduleManagerService extends ApiService {
-
   async list(): Promise<ScheduleManagerConfig | null> {
     try {
       const config = await this.#list();
@@ -14,136 +19,126 @@ class ScheduleManagerService extends ApiService {
       return null;
     }
   }
-  
+
   async update(config: ScheduleManagerConfig): Promise<UpdateConfigResponse> {
     try {
       const response = await this.#update(config);
       return response;
     } catch (error) {
       console.log('Unable to update config', error);
-      
+
       // TODO: Modify request util to return status too.
-      if (error == 'Provided version SID is not the latest deployed asset version SID')
-      {
+      if (error == 'Provided version SID is not the latest deployed asset version SID') {
         return {
           success: false,
-          buildSid: 'versionError'
+          buildSid: 'versionError',
         };
       }
-      
+
       return {
         success: false,
-        buildSid: 'error'
+        buildSid: 'error',
       };
     }
   }
-  
+
   async updateStatus(buildSid: string): Promise<UpdateConfigStatusResponse> {
     try {
-      const response = await this.#updateStatus({buildSid});
+      const response = await this.#updateStatus({ buildSid });
       return response;
     } catch (error) {
       console.log('Unable to get config build status', error);
       return {
         success: false,
-        buildStatus: 'error'
+        buildStatus: 'error',
       };
     }
   }
-  
+
   async publish(buildSid: string): Promise<PublishConfigResponse> {
     try {
-      const response = await this.#publish({buildSid});
+      const response = await this.#publish({ buildSid });
       return response;
     } catch (error) {
       console.log('Unable to publish config', error);
       return {
         success: false,
-        deploymentSid: 'error'
+        deploymentSid: 'error',
       };
     }
   }
 
-  #list = async () : Promise<ScheduleManagerConfig> => {
+  #list = async (): Promise<ScheduleManagerConfig> => {
     const manager = Flex.Manager.getInstance();
-    
+
     const encodedParams: EncodedParams = {
       Token: encodeURIComponent(manager.user.token),
     };
-    
-    const response = await this.fetchJsonWithReject<ScheduleManagerConfig>(
-      `https://${this.serverlessDomain}/admin/list`,
-      {
-        method: 'post',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: this.buildBody(encodedParams)
-      }
-    );
-    
-    return {
-        ...response,
-    };
-  };
-  
-  #update = async (config: ScheduleManagerConfig) : Promise<UpdateConfigResponse> => {
-    const manager = Flex.Manager.getInstance();
-    
-    const params = {
-      ...config,
-      Token: manager.user.token,
-    };
-    
-    const response = await this.fetchJsonWithReject<UpdateConfigResponse>(
-      `https://${this.serverlessDomain}/admin/update`,
-      {
-        method: 'post',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(params)
-      }
-    );
-    
+
+    const response = await this.fetchJsonWithReject<ScheduleManagerConfig>(`${this.serverlessDomain}/admin/list`, {
+      method: 'post',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: this.buildBody(encodedParams),
+    });
+
     return {
       ...response,
     };
   };
-  
-  #updateStatus = async (request: PublishConfigRequest) : Promise<UpdateConfigStatusResponse> => {
+
+  #update = async (config: ScheduleManagerConfig): Promise<UpdateConfigResponse> => {
     const manager = Flex.Manager.getInstance();
-    
+
+    const params = {
+      ...config,
+      Token: manager.user.token,
+    };
+
+    const response = await this.fetchJsonWithReject<UpdateConfigResponse>(`${this.serverlessDomain}/admin/update`, {
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(params),
+    });
+
+    return {
+      ...response,
+    };
+  };
+
+  #updateStatus = async (request: PublishConfigRequest): Promise<UpdateConfigStatusResponse> => {
+    const manager = Flex.Manager.getInstance();
+
     const encodedParams: EncodedParams = {
       buildSid: encodeURIComponent(request.buildSid),
       Token: encodeURIComponent(manager.user.token),
     };
-    
+
     const response = await this.fetchJsonWithReject<UpdateConfigStatusResponse>(
-      `https://${this.serverlessDomain}/admin/update-status`,
+      `${this.serverlessDomain}/admin/update-status`,
       {
         method: 'post',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: this.buildBody(encodedParams)
-      }
+        body: this.buildBody(encodedParams),
+      },
     );
-    
+
     return response;
   };
-  
-  #publish = async (request: PublishConfigRequest) : Promise<PublishConfigResponse> => {
+
+  #publish = async (request: PublishConfigRequest): Promise<PublishConfigResponse> => {
     const manager = Flex.Manager.getInstance();
-    
+
     const encodedParams: EncodedParams = {
       buildSid: encodeURIComponent(request.buildSid),
       Token: encodeURIComponent(manager.user.token),
     };
-    
-    const response = await this.fetchJsonWithReject<PublishConfigResponse>(
-      `https://${this.serverlessDomain}/admin/publish`,
-      {
-        method: 'post',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: this.buildBody(encodedParams)
-      }
-    );
-    
+
+    const response = await this.fetchJsonWithReject<PublishConfigResponse>(`${this.serverlessDomain}/admin/publish`, {
+      method: 'post',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: this.buildBody(encodedParams),
+    });
+
     return response;
   };
 }
