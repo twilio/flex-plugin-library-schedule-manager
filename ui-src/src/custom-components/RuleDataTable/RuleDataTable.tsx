@@ -145,7 +145,7 @@ const RuleDataTable = (props: OwnProps) => {
             header={ScheduleManagerStrings[StringTemplates.NAME]}
             sortDirection='asc'
             sortingFn={(a: Rule, b: Rule) => (a.name > b.name) ? 1 : -1}
-            content={(item: Rule) => (<span>{item.name}</span>)} />
+            content={(item: Rule) => (<span id={item.name}>{item.name}</span>)} />
           <ColumnDefinition
             key="type-column"
             header={ScheduleManagerStrings[StringTemplates.TYPE]}
