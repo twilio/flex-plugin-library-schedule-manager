@@ -103,6 +103,6 @@
         "51800893-7050-413d-a692-201e3d0161b6"
       ]
     },
-    { "name": "ExampleTwo", "manualClose": true }
+    { "name": "ExampleTwo", "manualClose": true, "rules": [] }
   ]
 }
