@@ -7,7 +7,7 @@ const assetPath = '/config.json';
 const openScheduleData = Runtime.getAssets()[assetPath].open;
 const parsedScheduleData = JSON.parse(openScheduleData());
 
-export const checkDate = (rule, now) => {
+const checkDate = (rule, now) => {
   // first, check the date component of the rule.
 
   // if bounds are provided, check current date against them
@@ -59,7 +59,7 @@ export const checkDate = (rule, now) => {
   return true;
 };
 
-export const checkTime = (rule, nowTz) => {
+const checkTime = (rule, nowTz) => {
   if (rule.startTime) {
     const startTime = DateTime.fromISO(rule.startTime);
 
@@ -160,3 +160,6 @@ exports.evaluateSchedule = (name, simulate, scheduleData = parsedScheduleData) =
 
   return returnData;
 };
+
+exports.checkDate = checkDate;
+exports.checkTime = checkTime;
