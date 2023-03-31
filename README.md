@@ -1,5 +1,3 @@
-NOTE: This repo is still a WIP (Work In Progress) and the codebase is not yet production ready.
-
 # Twilio Flex Schedule Manager
 
 This solution provides a flexible, robust, and scalable way to manage open and closed hours for Twilio Flex applications.
