@@ -185,6 +185,11 @@ exports.createBuild = async function (parameters) {
   }
 };
 
+const getEnv = function getEnv(context) {
+  const env = context.TWILIO_REGION ? context.TWILIO_REGION.split('-')[0] : '';
+  return env;
+};
+
 /**
  * @param {object} parameters the parameters for the function
  * @param {string} parameters.scriptName the name of the top level lambda function
@@ -212,8 +217,11 @@ exports.uploadAsset = async function (parameters) {
     const apiSecret = context.AUTH_TOKEN;
     const serviceSid = context.SERVICE_SID;
 
+    const env = getEnv(context);
+    const hostName = env ? `https://serverless-upload.${env}.twilio.com` : `https://serverless-upload.twilio.com`;
+
     // set upload parameters
-    const uploadUrl = `https://serverless-upload.twilio.com/v1/Services/${serviceSid}/Assets/${assetSid}/Versions`;
+    const uploadUrl = `${hostName}/v1/Services/${serviceSid}/Assets/${assetSid}/Versions`;
 
     const form = new FormData();
     form.append('Path', assetPath);
@@ -246,3 +254,5 @@ exports.uploadAsset = async function (parameters) {
     return retryHandler(error, parameters, exports.uploadAsset.name);
   }
 };
+
+exports.getEnv = getEnv;

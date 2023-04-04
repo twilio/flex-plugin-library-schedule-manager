@@ -70,7 +70,7 @@ describe('Test functions in serverless', () => {
       );
       jest.mock('../functions/common/twilio-wrappers/retry-handler.private', () => ({
         __esModule: true,
-        retryHandler: () => {},
+        retryHandler: () => { },
       }));
     });
     const validParams = {
@@ -89,7 +89,7 @@ describe('Test functions in serverless', () => {
       scriptName: '',
       attempts: 1,
       context: {
-        getTwilioClient: () => {},
+        getTwilioClient: () => { },
         ENVIRONMENT_SID: 'testEnvSid',
         SERVICE_SID: 'testServiceSid',
       },
@@ -160,7 +160,7 @@ describe('fetchBuildStatus()', () => {
   });
   jest.mock('../functions/common/twilio-wrappers/retry-handler.private', () => ({
     __esModule: true,
-    retryHandler: () => {},
+    retryHandler: () => { },
   }));
   const validParams = {
     scriptName: 'testScript',
@@ -239,7 +239,7 @@ describe('fetchLatestBuild()', () => {
     );
     jest.mock('../functions/common/twilio-wrappers/retry-handler.private', () => ({
       __esModule: true,
-      retryHandler: () => {},
+      retryHandler: () => { },
     }));
   });
   const validParams = {
@@ -256,7 +256,7 @@ describe('fetchLatestBuild()', () => {
     scriptName: '',
     attempts: 1,
     context: {
-      getTwilioClient: () => {},
+      getTwilioClient: () => { },
       SERVICE_SID: 'testServiceSid',
     },
   };
@@ -367,5 +367,33 @@ describe('fetchLatestDeployment()', () => {
     const Serverless = require('../functions/common/twilio-wrappers/serverless.private');
     const result = await Serverless.fetchLatestDeployment(parameters);
     expect(result).toEqual({ success: false, status: 400, message: 'No deployments found' });
+  });
+
+  it('getEnv should return empty string if TWILIO_REGION is not set', () => {
+    const context = {};
+    const Serverless = require('../functions/common/twilio-wrappers/serverless.private');
+    const env = Serverless.getEnv(context);
+    expect(env).toEqual('');
+  });
+
+  it('getEnv should return env if TWILIO_REGION is set', () => {
+    const context = { TWILIO_REGION: 'stage-us1' };
+    const Serverless = require('../functions/common/twilio-wrappers/serverless.private');
+    const env = Serverless.getEnv(context);
+    expect(env).toEqual('stage');
+  });
+
+  it('should return empty string if TWILIO_REGION is an empty string', () => {
+    const context = { TWILIO_REGION: '' };
+    const Serverless = require('../functions/common/twilio-wrappers/serverless.private');
+    const env = Serverless.getEnv(context);
+    expect(env).toEqual('');
+  });
+
+  it('should return env if TWILIO_REGION contains multiple hyphens', () => {
+    const context = { TWILIO_REGION: 'stage-ie1-west' };
+    const Serverless = require('../functions/common/twilio-wrappers/serverless.private');
+    const env = Serverless.getEnv(context);
+    expect(env).toEqual('stage');
   });
 });
