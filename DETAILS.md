@@ -1,7 +1,7 @@
 ## Prerequisites
 After plugin installation, the following sample studio configuration is required to connect incoming calls to check the schedule. Studio flows can be created [here](https://console.twilio.com/us1/develop/studio/flows?frameUrl=/console/studio/flows?x-target-region=us1).
 
-![Studio example](screenshots/studio.png)
+![Studio example](https://raw.githubusercontent.com/twilio/flex-plugin-library-schedule-manager/main/screenshots/studio.png)
 
 1. Bring a Run Function widget into your flow, named `check_schedule`, configured to the `flex-plugin-library-schedule-manager` service, and `/check-schedule` function.
 2. Add to the function parameters: key: `name`, value: `Name of schedule to check` and save.
