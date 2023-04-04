@@ -196,7 +196,7 @@ This calls the `admin/list` function, which requires the Flex user token. `sched
 
 ![Studio example](screenshots/studio.png)
 
-1. Bring a Run Function widget into your flow, named `check_schedule`, configured to the `schedule-manager` service, and `/check-schedule` function.
+1. Bring a Run Function widget into your flow, named `check_schedule`, configured to the `flex-plugin-library-schedule-manager` service, and `/check-schedule` function.
 2. Add to the function parameters: key: `name`, value: `Name of schedule to check` and save.
 3. Bring a Split Based On... widget into your flow and set the variable to test: `widgets.check_schedule.parsed.isOpen`
 4. Add a condition Equal To `true`, connect it to the step representing your open logic, and save.
