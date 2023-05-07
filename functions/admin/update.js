@@ -84,8 +84,8 @@ exports.handler = TokenValidator(async function update(context, event, callback)
       
     const newVersionSid = uploadResult.assetVersionSid;
     
-    // create new build with the new asset, but with functions and dependencies from the latest build
-    const assetVersions = [ newVersionSid ];
+    // create new build with the new asset and existing assets, but with functions and dependencies from the latest build
+    const assetVersions = [ newVersionSid, ...latestBuild.assetVersions.filter((x) => x.path !== assetPath).map((x) => x.sid) ];
     const functionVersions = latestBuild.functionVersions.map(version => version.sid);
     const dependencies = latestBuild.dependencies;
     
