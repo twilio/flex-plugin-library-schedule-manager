@@ -16,7 +16,7 @@ export enum FlexErrorSeverity {
 
 export type FlexPluginErrorContents = {
   type?: FlexPluginErrorType | string;
-  wrappedError?: Error | string | unknown;
+  wrappedError?: unknown;
   context?: string;
   description?: string;
   severity?: FlexErrorSeverity;
@@ -34,8 +34,8 @@ export class FlexPluginError extends Error {
     super(message);
     this.content = {
       ...content,
-      type: content.type || 'ScheduleManagerPlugin',
-      severity: content.severity || FlexErrorSeverity.normal,
+      type: content.type ?? 'ScheduleManagerPlugin',
+      severity: content.severity ?? FlexErrorSeverity.normal,
     };
     this.time = new Date();
     Object.setPrototypeOf(this, FlexPluginError.prototype);
@@ -47,7 +47,7 @@ class ErrorManagerImpl {
     try {
       console.log(`Schedule Manager Plugin: ${error}\nType: ${error.content.type}\n Context:${error.content.context}`);
       const pluginError = new Flex.FlexError(error.message, {
-        plugin: { name: packageJSON.name, version: packageJSON.version },
+        plugin: { name: packageJSON.id, version: packageJSON.version },
         description: error.content.description,
       });
       if (flexManager?.reportErrorEvent) {

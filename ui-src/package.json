@@ -1,6 +1,7 @@
 {
   "name": "flex-plugin-library-schedule-manager",
   "version": "1.0.0",
+  "id": "plibo-contact-center-schedule-manager",
   "private": true,
   "scripts": {
     "start": "twilio flex:plugins:start"
