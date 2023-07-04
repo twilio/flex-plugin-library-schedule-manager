@@ -4,7 +4,10 @@
   "id": "plibo-contact-center-schedule-manager",
   "private": true,
   "scripts": {
-    "start": "twilio flex:plugins:start"
+    "prebuild": "rimraf build && npm run bootstrap",
+    "postinstall": "flex-plugin pre-script-check",
+    "prestart": "npm run bootstrap",
+    "test": "jest"
   },
   "dependencies": {
     "@twilio-paste/core": "^15.3.0",

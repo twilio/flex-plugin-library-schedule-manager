@@ -1,6 +1,6 @@
 {
   "name": "plibo-contact-center-schedule-manager",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "test": "jest",
@@ -50,6 +50,6 @@
     "tzdata": "^1.0.32"
   },
   "engines": {
-    "node": "14"
+    "node": "16"
   }
 }
