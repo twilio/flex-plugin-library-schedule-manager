@@ -70,7 +70,7 @@ describe('Test functions in serverless', () => {
       );
       jest.mock('../functions/common/twilio-wrappers/retry-handler.private', () => ({
         __esModule: true,
-        retryHandler: () => { },
+        retryHandler: () => {},
       }));
     });
     const validParams = {
@@ -89,7 +89,7 @@ describe('Test functions in serverless', () => {
       scriptName: '',
       attempts: 1,
       context: {
-        getTwilioClient: () => { },
+        getTwilioClient: () => {},
         ENVIRONMENT_SID: 'testEnvSid',
         SERVICE_SID: 'testServiceSid',
       },
@@ -105,7 +105,9 @@ describe('Test functions in serverless', () => {
 
     test('should throw an error when given invalid parameters', async () => {
       const Serverless = require('../functions/common/twilio-wrappers/serverless.private');
-      await expect(Serverless.deployBuild(invalidParams)).rejects;
+      await expect(Serverless.deployBuild({ ...invalidParams, scriptName: 1 })).rejects.toEqual(
+        'Invalid parameters object passed. Parameters must contain scriptName of calling function',
+      );
     });
 
     test('should throw an error when given invalid parameters - scriptName', async () => {
@@ -115,7 +117,7 @@ describe('Test functions in serverless', () => {
           ...invalidParams,
           scriptName: 12,
         }),
-      ).rejects;
+      ).rejects.toEqual('Invalid parameters object passed. Parameters must contain scriptName of calling function');
     });
 
     test('should throw an error when given invalid parameters - attempts', async () => {
@@ -125,7 +127,7 @@ describe('Test functions in serverless', () => {
           ...invalidParams,
           attempts: 'hello',
         }),
-      ).rejects;
+      ).rejects.toEqual('Invalid parameters object passed. Parameters must contain the number of attempts');
     });
 
     test('should throw an error when given invalid parameters - context', async () => {
@@ -135,7 +137,7 @@ describe('Test functions in serverless', () => {
           ...invalidParams,
           context: 'hello',
         }),
-      ).rejects;
+      ).rejects.toEqual('Invalid parameters object passed. Parameters must contain context object');
     });
 
     test('should throw an error when given invalid parameters - buildSid', async () => {
@@ -145,7 +147,7 @@ describe('Test functions in serverless', () => {
           ...invalidParams,
           buildSid: 12,
         }),
-      ).rejects;
+      ).rejects.toEqual('Invalid parameters object passed. Parameters must contain buildSid string');
     });
   });
 });
@@ -160,7 +162,7 @@ describe('fetchBuildStatus()', () => {
   });
   jest.mock('../functions/common/twilio-wrappers/retry-handler.private', () => ({
     __esModule: true,
-    retryHandler: () => { },
+    retryHandler: () => {},
   }));
   const validParams = {
     scriptName: 'testScript',
@@ -206,7 +208,7 @@ describe('fetchBuildStatus()', () => {
         ...invalidParams,
         attempts: 'hello',
       }),
-    ).rejects;
+    ).rejects.toEqual('Invalid parameters object passed. Parameters must contain scriptName of calling function');
   });
 
   test('should throw an error when given invalid parameters - context', async () => {
@@ -216,7 +218,7 @@ describe('fetchBuildStatus()', () => {
         ...invalidParams,
         context: 'hello',
       }),
-    ).rejects;
+    ).rejects.toEqual('Invalid parameters object passed. Parameters must contain scriptName of calling function');
   });
 
   test('should throw an error when given invalid parameters - buildSid', async () => {
@@ -226,7 +228,7 @@ describe('fetchBuildStatus()', () => {
         ...invalidParams,
         buildSid: 12,
       }),
-    ).rejects;
+    ).rejects.toEqual('Invalid parameters object passed. Parameters must contain scriptName of calling function');
   });
 });
 
@@ -239,7 +241,7 @@ describe('fetchLatestBuild()', () => {
     );
     jest.mock('../functions/common/twilio-wrappers/retry-handler.private', () => ({
       __esModule: true,
-      retryHandler: () => { },
+      retryHandler: () => {},
     }));
   });
   const validParams = {
@@ -256,7 +258,7 @@ describe('fetchLatestBuild()', () => {
     scriptName: '',
     attempts: 1,
     context: {
-      getTwilioClient: () => { },
+      getTwilioClient: () => {},
       SERVICE_SID: 'testServiceSid',
     },
   };
