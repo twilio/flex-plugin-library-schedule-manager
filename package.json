@@ -1,6 +1,6 @@
 {
   "name": "plibo-contact-center-schedule-manager",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "test": "jest",
@@ -42,6 +42,7 @@
     "jest": "^29.4.2",
     "jest-environment-jsdom": "^29.4.2",
     "jest-fetch-mock": "^3.0.3",
+    "jest-junit": "12.0.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-test-renderer": "17.0.2",
@@ -50,6 +51,6 @@
     "tzdata": "^1.0.32"
   },
   "engines": {
-    "node": "14"
+    "node": "16"
   }
 }
