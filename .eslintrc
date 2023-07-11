@@ -1,16 +1,4 @@
 {
-  "env": {
-    "browser": true,
-    "commonjs": true,
-    "es6": true,
-    "jest": true,
-    "node": true
-  },
-
-  "globals": {
-    "Twilio": true,
-    "Runtime": true
-  },
   "parser": "@typescript-eslint/parser",
   "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended", "prettier"],
   "plugins": ["prettier"],
@@ -21,12 +9,13 @@
     "@typescript-eslint/ban-ts-comment": "off",
     "no-console": "warn",
     "no-unused-vars": "off",
+    "@typescript-eslint/no-use-before-define": "warn",
     "@typescript-eslint/no-unused-vars": "warn",
     "@typescript-eslint/no-var-requires": "off",
     "@typescript-eslint/no-empty-function": "off",
     "@typescript-eslint/no-inferrable-types": "warn",
-    "prefer-const": "warn",
+    "@typescript-eslint/no-require-imports": "warn",
     "@typescript-eslint/no-empty-interface": "warn",
-    "no-undef": "error"
+    "no-undef": "warn"
   }
 }

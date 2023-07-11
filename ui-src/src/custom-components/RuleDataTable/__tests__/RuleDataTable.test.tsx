@@ -8,9 +8,7 @@ describe('<RuleDataTable>', () => {
     ).toMatchSnapshot();
   });
   it('should render component with props isLoading true and create rule button disabled', () => {
-    const { getByTestId } = render(
-      <RuleDataTable isLoading={true} rules={[]} schedules={[]} updateRules={() => {}} />,
-    );
-    expect(getByTestId("create-rule-btn").disabled).toBeTruthy();
+    const { getByTestId } = render(<RuleDataTable isLoading={true} rules={[]} schedules={[]} updateRules={() => {}} />);
+    expect(getByTestId('create-rule-btn').disabled).toBeTruthy();
   });
 });

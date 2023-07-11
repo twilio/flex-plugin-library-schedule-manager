@@ -7,11 +7,11 @@ export default (flex: typeof Flex, manager: Flex.Manager) => {
   if (!canShowScheduleManager(manager)) {
     return;
   }
-  
+
   // Add view
   flex.ViewCollection.Content.add(
     <flex.View name="schedule-manager" key="schedule-manager-view">
       <ScheduleView key="schedule-manager-view-content" />
-    </flex.View>
+    </flex.View>,
   );
-}
+};

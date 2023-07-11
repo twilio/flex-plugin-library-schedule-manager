@@ -7,9 +7,7 @@ export default (flex: typeof Flex, manager: Flex.Manager) => {
   if (!canShowScheduleManager(manager)) {
     return;
   }
-  
+
   // Add side nav button for the view
-  flex.SideNav.Content.add(
-    <ScheduleSideLink viewName="schedule-manager" key="schedule-manager-side-nav" />
-  );
-}
+  flex.SideNav.Content.add(<ScheduleSideLink viewName="schedule-manager" key="schedule-manager-side-nav" />);
+};

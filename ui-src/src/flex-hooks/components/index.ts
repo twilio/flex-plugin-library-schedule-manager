@@ -6,4 +6,4 @@ import ViewCollection from './ViewCollection';
 export default (flex: typeof Flex, manager: Flex.Manager) => {
   SideNav(flex, manager);
   ViewCollection(flex, manager);
-}
+};

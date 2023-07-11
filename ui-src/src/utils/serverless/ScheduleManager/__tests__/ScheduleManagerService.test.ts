@@ -145,11 +145,8 @@ const scheduleData = {
 
 describe('Schedule Manager Service', () => {
   describe('list method', () => {
-
     it('should return correct data', async () => {
-      fetch.mockResponseOnce(
-        JSON.stringify(scheduleData),
-      );
+      fetch.mockResponseOnce(JSON.stringify(scheduleData));
       const listResponse = await scheduleManagerInstance.list();
       expect(listResponse?.version).toEqual('ZNd6b4b840cc2e20664cd9c7895487261d');
     });
@@ -160,7 +157,6 @@ describe('Schedule Manager Service', () => {
       await scheduleManagerInstance.list();
       expect(logSpy.mock.calls[0][1].toString().includes('Beep Boop')).toBeTruthy();
     });
-
   });
 
   describe('update method', () => {
@@ -187,19 +183,16 @@ describe('Schedule Manager Service', () => {
   });
 
   describe('updateStatus method', () => {
-
     it('should call with passed config', async () => {
-      fetch.mockResponseOnce(
-        JSON.stringify({ success: true }),
-      );
-      const response = await scheduleManagerInstance.updateStatus("buildSidNew");
+      fetch.mockResponseOnce(JSON.stringify({ success: true }));
+      const response = await scheduleManagerInstance.updateStatus('buildSidNew');
       expect(response.success).toBeTruthy();
     });
 
     it('should propagate error while fetching', async () => {
       fetch.mockRejectOnce(new Error('Beep Boop'));
       const logSpy = jest.spyOn(console, 'log');
-      const response = await scheduleManagerInstance.updateStatus("buildSidNewFail");
+      const response = await scheduleManagerInstance.updateStatus('buildSidNewFail');
       expect(response.success).toBeFalsy();
       expect(logSpy.mock.calls[0][1].toString().includes('Beep Boop')).toBeTruthy();
     });
@@ -208,15 +201,15 @@ describe('Schedule Manager Service', () => {
   describe('publish method', () => {
     it('should call with passed config', async () => {
       fetch.mockResponseOnce(JSON.stringify({ deploymentSid: 'hello', success: true }));
-      const response = await scheduleManagerInstance.publish("buildSidPublish");
+      const response = await scheduleManagerInstance.publish('buildSidPublish');
       expect(response?.success).toBeTruthy();
-      expect(response?.deploymentSid).toBe("hello");
+      expect(response?.deploymentSid).toBe('hello');
     });
 
     it('should propagate error while fetching', async () => {
       fetch.mockRejectOnce(new Error('Beep Boop'));
       const logSpy = jest.spyOn(console, 'log');
-      const response = await scheduleManagerInstance.publish("buildSidPublish");
+      const response = await scheduleManagerInstance.publish('buildSidPublish');
       expect(response?.success).toBeFalsy();
       expect(logSpy.mock.calls[0][1].toString().includes('Beep Boop')).toBeTruthy();
     });

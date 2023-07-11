@@ -8,7 +8,6 @@ module.exports = {
   clearMocks: true,
   setupFilesAfterEnv: ['<rootDir>/setupTests.js'],
   coverageDirectory: './coverage/',
-  collectCoverage: true,
   collectCoverageFrom: ['**/*.{js,jsx,ts,tsx}'],
   coveragePathIgnorePatterns: [
     '.*\\.d\\.ts',

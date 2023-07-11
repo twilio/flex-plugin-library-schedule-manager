@@ -1,6 +1,6 @@
 import * as Flex from '@twilio/flex-ui';
 import { FlexPlugin } from '@twilio/flex-plugin';
-import { CustomizationProvider } from "@twilio-paste/core/customization";
+import { CustomizationProvider } from '@twilio-paste/core/customization';
 
 import CustomizeFlexComponents from './flex-hooks/components';
 import CustomizeFlexStrings from './flex-hooks/strings';
@@ -20,17 +20,12 @@ export default class ScheduleManagerPlugin extends FlexPlugin {
    * @param flex { typeof Flex }
    */
   async init(flex: typeof Flex, manager: Flex.Manager): Promise<void> {
-    
     flex.setProviders({
-       PasteThemeProvider: CustomizationProvider
+      PasteThemeProvider: CustomizationProvider,
     });
-    
-    const initializers = [
-      CustomizeFlexComponents,
-      CustomizeFlexStrings,
-      CustomizeFlexNotifications
-    ];
-    
+
+    const initializers = [CustomizeFlexComponents, CustomizeFlexStrings, CustomizeFlexNotifications];
+
     initializers.forEach((initializer) => initializer(flex, manager));
   }
 }

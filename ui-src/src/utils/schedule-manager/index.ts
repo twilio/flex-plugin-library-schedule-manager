@@ -112,7 +112,7 @@ export const publishSchedules = async (): Promise<number> => {
     console.log('Schedule update failed', updateResponse);
     ErrorManager.createAndProcessError('Schedule update failed', {
       type: FlexPluginErrorType.action,
-      context: 'Plugin.ScheduleManager.publishSchedules'
+      context: 'Plugin.ScheduleManager.publishSchedules',
     });
 
     if (updateResponse.buildSid == 'versionError') {
@@ -134,7 +134,7 @@ export const publishSchedules = async (): Promise<number> => {
       console.log('Schedule update build failed', updateStatus);
       ErrorManager.createAndProcessError('Schedule update build failed', {
         type: FlexPluginErrorType.action,
-        context: 'Plugin.ScheduleManager.publishSchedules'
+        context: 'Plugin.ScheduleManager.publishSchedules',
       });
       Notifications.showNotification(NotificationIds.PUBLISH_FAILED);
       return 3;
@@ -144,13 +144,13 @@ export const publishSchedules = async (): Promise<number> => {
     updateStatus = await ScheduleManagerService.updateStatus(updateResponse.buildSid);
   }
 
-  let publishResponse = await ScheduleManagerService.publish(updateResponse.buildSid);
+  const publishResponse = await ScheduleManagerService.publish(updateResponse.buildSid);
 
   if (!publishResponse.success) {
     console.log('Schedule publish failed', publishResponse);
     ErrorManager.createAndProcessError('Schedule publish failed', {
       type: FlexPluginErrorType.action,
-      context: 'Plugin.ScheduleManager.publishSchedules'
+      context: 'Plugin.ScheduleManager.publishSchedules',
     });
     Notifications.showNotification(NotificationIds.PUBLISH_FAILED);
     return 3;
