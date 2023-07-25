@@ -10,15 +10,15 @@ interface OwnProps {
 const ScheduleSideLink = (props: OwnProps) => {
   function navigate() {
     Actions.invokeAction('NavigateToView', { viewName: props.viewName });
-  };
-  
+  }
+
   return (
     <SideLink
       showLabel={true}
       icon="Clock"
       iconActive="Clock"
-      isActive={ props.activeView === props.viewName}
-      onClick= { navigate }
+      isActive={props.activeView === props.viewName}
+      onClick={navigate}
       key="schedule-manager-side-link"
     >
       {ScheduleManagerStrings[StringTemplates.SCHEDULE_MANAGER_TITLE]}

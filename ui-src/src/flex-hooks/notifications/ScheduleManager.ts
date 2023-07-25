@@ -17,38 +17,38 @@ export default (flex: typeof Flex, manager: Flex.Manager) => {
     closeButton: true,
     content: StringTemplates.PUBLISH_ABORTED,
     type: NotificationType.error,
-    timeout: 0
+    timeout: 0,
   });
-  
+
   flex.Notifications.registerNotification({
     id: NotificationIds.PUBLISH_FAILED_OTHER_UPDATE,
     closeButton: true,
     content: StringTemplates.PUBLISH_FAILED_OTHER_UPDATE,
     type: NotificationType.error,
-    timeout: 0
+    timeout: 0,
   });
-  
+
   flex.Notifications.registerNotification({
     id: NotificationIds.PUBLISH_FAILED,
     closeButton: true,
     content: StringTemplates.PUBLISH_FAILED,
     type: NotificationType.error,
-    timeout: 0
+    timeout: 0,
   });
-  
+
   flex.Notifications.registerNotification({
     id: NotificationIds.PUBLISH_FAILED_ACTIVITY,
     closeButton: true,
     content: StringTemplates.PUBLISH_FAILED_ACTIVITY,
     type: NotificationType.error,
-    timeout: 0
+    timeout: 0,
   });
-  
+
   flex.Notifications.registerNotification({
     id: NotificationIds.PUBLISH_SUCCESS,
     closeButton: true,
     content: StringTemplates.PUBLISH_SUCCESS,
     type: NotificationType.success,
-    timeout: 3000
+    timeout: 3000,
   });
 };
