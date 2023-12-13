@@ -9,6 +9,12 @@ import RuleEditor from '../RuleEditor/RuleEditor';
 import { Rule, Schedule } from '../../types/schedule-manager';
 import ScheduleManagerStrings, { StringTemplates } from '../../flex-hooks/strings/ScheduleManager';
 import RRuleLanguage from '../../utils/RRuleLanguage';
+import { TableContainer } from '../ScheduleView/ScheduleViewStyles';
+import SchedulesAction from '../common/SchedulesAction';
+import { Badge, Flex } from '@twilio-paste/core';
+import { StatusBadge } from '@twilio-paste/status';
+import AlertBox from '../common/AlertBox';
+import { updateRuleData } from '../../utils/schedule-manager';
 
 interface OwnProps {
   isLoading: boolean;
@@ -20,14 +26,17 @@ interface OwnProps {
 const RuleDataTable = (props: OwnProps) => {
   const [showPanel, setShowPanel] = useState(false);
   const [selectedRule, setSelectedRule] = useState(null as Rule | null);
-  const [openIndexNext, setOpenIndexNext] = useState(null as number | null);
+  // const [openIndexNext, setOpenIndexNext] = useState(null as number | null);
+  const [deleteRule, setDeleteRule] = useState(null as Rule | null);
+  const [copyRule, setCopyRule] = useState(false);
 
-  useEffect(() => {
-    if (openIndexNext) {
-      setSelectedRule(props.rules[openIndexNext]);
-      setOpenIndexNext(null);
-    }
-  }, [props.rules]);
+  // useEffect(() => {
+  //   if (openIndexNext) {
+  //     setCopySchedule(false);
+  //     setSelectedRule(props.rules[openIndexNext]);
+  //     setOpenIndexNext(null);
+  //   }
+  // }, [props.rules]);
 
   useEffect(() => {
     if (selectedRule !== null) {
@@ -45,50 +54,84 @@ const RuleDataTable = (props: OwnProps) => {
     setSelectedRule(null);
   };
 
-  const onRowClick = (item: Rule) => {
+  const onEditOrClone = (item: Rule, type: string) => {
+    if (type == 'copy') {
+      setCopyRule(true);
+    }
     setSelectedRule(item);
   };
 
-  const onUpdateRule = (newRules: Rule[], openIndex: number | null) => {
-    if (openIndex) {
-      setOpenIndexNext(openIndex);
-    }
+  const onUpdateRule = (newRules: Rule[]) => {
+    // if (openIndex) {
+    //   setOpenIndexNext(openIndex);
+    // }
 
     props.updateRules(newRules);
     document.querySelector('#rule-data-table-root')?.scrollIntoView({ behavior: 'smooth' });
+    setShowPanel(false);
+    setSelectedRule(null);
+    setCopyRule(false);
 
-    if (!openIndex) {
-      setShowPanel(false);
-      setSelectedRule(null);
-    }
+    // if (!openIndex) {
+    //   setShowPanel(false);
+    //   setSelectedRule(null);
+    // }
   };
 
-  const getRuleType = (rule: Rule): string => {
-    let typeStr = ScheduleManagerStrings[StringTemplates.OPEN];
+  const getRuleRecurrence = (rule: Rule): string => {
+    let recStr = ScheduleManagerStrings[StringTemplates.ONE_TIME];
 
-    if (rule.isOpen === false) {
-      typeStr = ScheduleManagerStrings[StringTemplates.CLOSED];
-
-      if (rule.closedReason && rule.closedReason !== 'closed') {
-        typeStr += ` (${rule.closedReason})`;
+    if (rule.dateRRule) {
+      const freq = RRule.fromString(rule.dateRRule).options.freq;
+      switch (freq) {
+        case 0:
+          recStr = 'Every year';
+          break;
+        case 1:
+          recStr = 'Every month';
+          break;
+        case 2:
+          recStr = 'Every week';
+          break;
+        case 3:
+          recStr = 'Daily';
+          break;
+        default:
+          break;
       }
+      return recStr;
     }
-
-    return typeStr;
+    return recStr;
   };
 
-  const getRuleTime = (rule: Rule): string => {
+  const getRuleTime = (rule: Rule): any => {
     let timeStr = ScheduleManagerStrings[StringTemplates.ANY_TIME];
+    if (rule.isOpen) {
+      if (rule.startTime) {
+        timeStr = rule.startTime;
+      }
 
-    if (rule.startTime) {
-      timeStr = rule.startTime;
+      if (rule.endTime) {
+        timeStr += ` - ${rule.endTime}`;
+      }
+
+      return (
+        <Badge as="span" variant="success">
+          {`Open ${timeStr}`}
+        </Badge>
+      );
+    } else {
+      timeStr = ScheduleManagerStrings[StringTemplates.CLOSEDALLDAY];
+
+      // if (rule.closedReason && rule.closedReason !== 'closed') {
+      //   timeStr += ` (${rule.closedReason})`;
+      // }
+      return (
+        <Badge as="span" variant="warning">
+          {timeStr}
+        </Badge>
+      );
     }
-
-    if (rule.endTime) {
-      timeStr += ` - ${rule.endTime}`;
-    }
-
-    return timeStr;
   };
 
   const getRuleDate = (rule: Rule): string => {
@@ -100,7 +143,8 @@ const RuleDataTable = (props: OwnProps) => {
       dateStr = '';
 
       if (rule.dateRRule) {
-        dateStr += RRule.fromString(rule.dateRRule).toText(undefined, RRuleLanguage);
+        const text = RRule.fromString(rule.dateRRule).toText(undefined, RRuleLanguage);
+        dateStr += text.charAt(0).toUpperCase() + text.slice(1);
       }
 
       if (dateStr && (rule.startDate || rule.endDate)) {
@@ -122,55 +166,104 @@ const RuleDataTable = (props: OwnProps) => {
     return dateStr;
   };
 
+  const handleDeleteConfirmSubmit = (): void => {
+    if (!deleteRule) {
+      return;
+    }
+
+    const newScheduleData = updateRuleData(null, deleteRule);
+    onUpdateRule(newScheduleData);
+  };
+
   return (
     <>
       <div id="rule-data-table-root">
-        <Box padding="space60">
+        <Box padding="space60" display={'flex'} justifyContent={'flex-end'}>
           <Button variant="primary" data-testid="create-rule-btn" disabled={props.isLoading} onClick={createRuleClick}>
             <PlusIcon decorative />
             {ScheduleManagerStrings[StringTemplates.CREATE_RULE_BUTTON]}
           </Button>
         </Box>
-        <DataTable
-          items={props.rules}
-          isLoading={props.isLoading}
-          onRowClick={onRowClick}
-          defaultSortColumn="name-column"
-        >
-          <ColumnDefinition
-            key="name-column"
-            header={ScheduleManagerStrings[StringTemplates.NAME]}
-            sortDirection="asc"
-            sortingFn={(a: Rule, b: Rule) => (a.name > b.name ? 1 : -1)}
-            content={(item: Rule) => <span id={item.name}>{item.name}</span>}
-          />
-          <ColumnDefinition
-            key="type-column"
-            header={ScheduleManagerStrings[StringTemplates.TYPE]}
-            sortingFn={(a: Rule, b: Rule) => (getRuleType(a) > getRuleType(b) ? 1 : -1)}
-            content={(item: Rule) => <span>{getRuleType(item)}</span>}
-          />
-          <ColumnDefinition
-            key="time-column"
-            header={ScheduleManagerStrings[StringTemplates.TIME]}
-            sortingFn={(a: Rule, b: Rule) => (getRuleTime(a) > getRuleTime(b) ? 1 : -1)}
-            content={(item: Rule) => <span>{getRuleTime(item)}</span>}
-          />
-          <ColumnDefinition
-            key="date-column"
-            header={ScheduleManagerStrings[StringTemplates.DATE]}
-            sortingFn={(a: Rule, b: Rule) => (getRuleDate(a) > getRuleDate(b) ? 1 : -1)}
-            content={(item: Rule) => <span>{getRuleDate(item)}</span>}
-          />
-        </DataTable>
+        <TableContainer>
+          <DataTable
+            items={props.rules}
+            isLoading={props.isLoading}
+            // onRowClick={onRowClick}
+            defaultSortColumn="name-column"
+          >
+            <ColumnDefinition
+              key="name-column"
+              header={ScheduleManagerStrings[StringTemplates.NAME]}
+              sortDirection="asc"
+              sortingFn={(a: Rule, b: Rule) => (a.name > b.name ? 1 : -1)}
+              content={(item: Rule) => <span id={item.name}>{item.name}</span>}
+            />
+            <ColumnDefinition
+              key="time-column"
+              header={ScheduleManagerStrings[StringTemplates.TIME]}
+              sortingFn={(a: Rule, b: Rule) => (getRuleTime(a) > getRuleTime(b) ? 1 : -1)}
+              content={(item: Rule) => getRuleTime(item)}
+            />
+            <ColumnDefinition
+              key="date-column"
+              header={ScheduleManagerStrings[StringTemplates.DATE]}
+              sortingFn={(a: Rule, b: Rule) => (getRuleDate(a) > getRuleDate(b) ? 1 : -1)}
+              content={(item: Rule) => <span>{getRuleDate(item)}</span>}
+            />
+            <ColumnDefinition
+              key="recurrence-column"
+              header={ScheduleManagerStrings[StringTemplates.DATE]}
+              sortingFn={(a: Rule, b: Rule) => (getRuleDate(a) > getRuleDate(b) ? 1 : -1)}
+              content={(item: Rule) => <span>{getRuleRecurrence(item)}</span>}
+            />
+            <ColumnDefinition
+              key="publish-status-column"
+              header={ScheduleManagerStrings[StringTemplates.COLUMN_PUBLISHSTATUS]}
+              // sortingFn={(a: Rule, b: Rule) => (a.manualClose ? 1 : -1)}
+              content={(item: Rule) => (
+                <StatusBadge as="span" variant="ProcessSuccess">
+                  Published
+                </StatusBadge>
+              )}
+            />
+            <ColumnDefinition
+              key="actions-column"
+              header=""
+              // sortingFn={(a: Rule, b: Rule) => (a.manualClose ? 1 : -1)}
+              content={(item: Rule) => (
+                <SchedulesAction
+                  onCopy={() => {
+                    onEditOrClone(item, 'copy');
+                  }}
+                  onDelete={() => setDeleteRule(item)}
+                  onEdit={() => onEditOrClone(item, 'edit')}
+                />
+              )}
+            />
+          </DataTable>
+        </TableContainer>
       </div>
       <RuleEditor
         onPanelClosed={onPanelClosed}
         showPanel={showPanel}
+        copy={copyRule}
         schedules={props.schedules}
         selectedRule={selectedRule}
         onUpdateRule={onUpdateRule}
       />
+      <AlertBox
+        handleClose={() => setDeleteRule(null)}
+        isOpen={!!deleteRule}
+        handleSubmit={() => handleDeleteConfirmSubmit()}
+        title={'Delete schedule'}
+      >
+        <Flex>
+          <Box as="p">{ScheduleManagerStrings[StringTemplates.DELETE_CONFIRM_RULE]}</Box>
+          <Box as="strong" fontWeight={'fontWeightSemibold'} marginLeft={'space10'}>
+            {deleteRule?.name}
+          </Box>
+        </Flex>
+      </AlertBox>
     </>
   );
 };

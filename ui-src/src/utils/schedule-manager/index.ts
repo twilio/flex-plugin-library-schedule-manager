@@ -34,6 +34,7 @@ export const loadScheduleData = async (): Promise<ScheduleManagerConfig | null> 
 export const updateScheduleData = (newSchedule: Schedule | null, existingSchedule: Schedule | null): Schedule[] => {
   if (existingSchedule === null && newSchedule !== null) {
     // adding schedule
+    console.log('config.data.schedules', config.data.schedules);
     config.data.schedules = [...config.data.schedules, newSchedule];
   } else if (existingSchedule !== null && newSchedule === null) {
     // removing existing schedule

@@ -20,13 +20,15 @@ import { v4 as uuidv4 } from 'uuid';
 import { isRuleUnique, updateRuleData } from '../../utils/schedule-manager';
 import { Rule, Schedule } from '../../types/schedule-manager';
 import ScheduleManagerStrings, { StringTemplates } from '../../flex-hooks/strings/ScheduleManager';
+import EditorPanel from '../common/EditorPanel';
 
 interface OwnProps {
   onPanelClosed: () => void;
   showPanel: boolean;
+  copy: boolean;
   schedules: Schedule[];
   selectedRule: Rule | null;
-  onUpdateRule: (rules: Rule[], openIndex: number | null) => void;
+  onUpdateRule: (rules: Rule[]) => void;
 }
 
 const RuleEditor = (props: OwnProps) => {
@@ -192,8 +194,8 @@ const RuleEditor = (props: OwnProps) => {
     setName(event.currentTarget.value);
   };
 
-  const handleIsOpenChange = (value: string) => {
-    if (value === 'open') {
+  const handleIsOpenChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    if (event.target.value === 'open') {
       setIsOpen(true);
     } else {
       setIsOpen(false);
@@ -281,7 +283,7 @@ const RuleEditor = (props: OwnProps) => {
     setEndDate(event.currentTarget.value);
   };
 
-  const saveRule = (copy: boolean) => {
+  const saveRule = () => {
     // validation
     if (!name) {
       setError(ScheduleManagerStrings[StringTemplates.ERROR_NAME_REQUIRED]);
@@ -448,10 +450,10 @@ const RuleEditor = (props: OwnProps) => {
       setError('');
       const newRuleData = updateRuleData(newRule, props.selectedRule);
 
-      if (copy) {
+      if (props.copy) {
         copyRule(newRule);
       } else {
-        props.onUpdateRule(newRuleData, null);
+        props.onUpdateRule(newRuleData);
       }
     } else {
       setError(ScheduleManagerStrings[StringTemplates.ERROR_NAME_UNIQUE]);
@@ -472,15 +474,12 @@ const RuleEditor = (props: OwnProps) => {
     }
 
     const ruleCopyData = updateRuleData(ruleCopy, null);
-    props.onUpdateRule(ruleCopyData, ruleCopyData.indexOf(ruleCopy));
+    props.onUpdateRule(ruleCopyData);
   };
 
-  const handleSave = () => {
-    saveRule(false);
-  };
-
-  const handleCopy = () => {
-    saveRule(true);
+  const handleCancel = () => {
+    // saveSchedule(true);
+    console.log('cancel');
   };
 
   const handleDelete = () => {
@@ -504,14 +503,13 @@ const RuleEditor = (props: OwnProps) => {
     }
 
     const newRuleData = updateRuleData(null, props.selectedRule);
-    props.onUpdateRule(newRuleData, null);
+    props.onUpdateRule(newRuleData);
   };
 
   return (
-    <SidePanel
-      displayName="ruleEditor"
-      isHidden={!props.showPanel}
-      handleCloseClick={props.onPanelClosed}
+    <EditorPanel
+      onPanelClosed={props.onPanelClosed}
+      showPanel={props.showPanel}
       title={
         <span>
           {props.selectedRule === null
@@ -520,7 +518,7 @@ const RuleEditor = (props: OwnProps) => {
         </span>
       }
     >
-      <Box padding="space60">
+      <Box padding="space60" overflowY={'auto'} maxHeight={'80vh'}>
         <Stack orientation="vertical" spacing="space80">
           <>
             <Label htmlFor="name" required>
@@ -528,21 +526,17 @@ const RuleEditor = (props: OwnProps) => {
             </Label>
             <Input id="name" name="name" type="text" value={name} onChange={handleChangeName} required />
           </>
-          <RadioGroup
-            name="isOpen"
-            value={isOpen ? 'open' : 'closed'}
-            legend={ScheduleManagerStrings[StringTemplates.TYPE]}
+
+          <Select
+            id="recurrence"
+            name="recurrence"
+            defaultValue="none"
+            value={recurrence}
             onChange={handleIsOpenChange}
-            orientation="horizontal"
-            required
           >
-            <Radio id="open" value="open" name="isOpen">
-              {ScheduleManagerStrings[StringTemplates.OPEN]}
-            </Radio>
-            <Radio id="closed" value="closed" name="isOpen">
-              {ScheduleManagerStrings[StringTemplates.CLOSED]}
-            </Radio>
-          </RadioGroup>
+            <Option value="open">{ScheduleManagerStrings[StringTemplates.OPEN]}</Option>
+            <Option value="closed">{ScheduleManagerStrings[StringTemplates.CLOSED]}</Option>
+          </Select>
           {!isOpen && (
             <>
               <Label htmlFor="closedReason" required>
@@ -559,9 +553,6 @@ const RuleEditor = (props: OwnProps) => {
               <HelpText>{ScheduleManagerStrings[StringTemplates.CLOSED_REASON_TEXT]}</HelpText>
             </>
           )}
-          <Heading as="h3" variant="heading30">
-            {ScheduleManagerStrings[StringTemplates.TIME_SETTINGS_TITLE]}
-          </Heading>
           <Checkbox checked={allDay} onChange={handleChangeAllDay} id="allDay" name="allDay">
             {ScheduleManagerStrings[StringTemplates.ALL_DAY]}
           </Checkbox>
@@ -581,9 +572,6 @@ const RuleEditor = (props: OwnProps) => {
               <TimePicker id="endTime" name="endTime" value={endTime} onChange={handleChangeEndTime} required />
             </>
           )}
-          <Heading as="h3" variant="heading30">
-            {ScheduleManagerStrings[StringTemplates.DATE_SETTINGS_TITLE]}
-          </Heading>
           <>
             <Label htmlFor="recurrence" required>
               {ScheduleManagerStrings[StringTemplates.RECURRENCE]}
@@ -706,22 +694,24 @@ const RuleEditor = (props: OwnProps) => {
             </>
           )}
           {error.length > 0 && <Alert variant="error">{error}</Alert>}
-          <Stack orientation="horizontal" spacing="space30">
-            <Button variant="primary" onClick={handleSave} data-testid="save-rule-btn">
-              {ScheduleManagerStrings[StringTemplates.SAVE_BUTTON]}
-            </Button>
-            <Button variant="secondary" onClick={handleCopy}>
-              {ScheduleManagerStrings[StringTemplates.SAVE_COPY_BUTTON]}
-            </Button>
+        </Stack>
+        <Box position={'fixed'} bottom={'space40'} right={'space60'}>
+          <Stack orientation={'horizontal'} spacing="space30">
             {props.selectedRule !== null && (
               <Button variant="destructive_secondary" onClick={handleDelete} data-testid="delete-rule-btn">
                 {ScheduleManagerStrings[StringTemplates.DELETE_BUTTON]}
               </Button>
             )}
+            <Button variant="secondary" onClick={handleCancel}>
+              {ScheduleManagerStrings[StringTemplates.CANCEL_BUTTON]}
+            </Button>
+            <Button variant="primary" onClick={() => saveRule()} data-testid="save-rule-btn">
+              {ScheduleManagerStrings[StringTemplates.SAVE_BUTTON]}
+            </Button>
           </Stack>
-        </Stack>
+        </Box>
       </Box>
-    </SidePanel>
+    </EditorPanel>
   );
 };
 
