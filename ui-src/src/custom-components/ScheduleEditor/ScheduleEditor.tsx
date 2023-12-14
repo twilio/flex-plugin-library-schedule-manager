@@ -186,11 +186,6 @@ const ScheduleEditor = (props: OwnProps) => {
     props.onUpdateSchedule(scheduleCopyData);
   };
 
-  const handleCancel = () => {
-    // saveSchedule(true);
-    console.log('cancel');
-  };
-
   const handleDelete = () => {
     if (!props.selectedSchedule) {
       return;
@@ -280,7 +275,7 @@ const ScheduleEditor = (props: OwnProps) => {
                 {ScheduleManagerStrings[StringTemplates.DELETE_BUTTON]}
               </Button>
             )}
-            <Button variant="secondary" onClick={handleCancel} data-testid="cancel-btn">
+            <Button variant="secondary" onClick={() => props.onPanelClosed()} data-testid="cancel-btn">
               {ScheduleManagerStrings[StringTemplates.CANCEL_BUTTON]}
             </Button>
             <Button variant="primary" onClick={() => saveSchedule()} data-testid="save-btn">

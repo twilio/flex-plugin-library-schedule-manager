@@ -477,11 +477,6 @@ const RuleEditor = (props: OwnProps) => {
     props.onUpdateRule(ruleCopyData);
   };
 
-  const handleCancel = () => {
-    // saveSchedule(true);
-    console.log('cancel');
-  };
-
   const handleDelete = () => {
     if (!props.selectedRule) {
       return;
@@ -702,7 +697,7 @@ const RuleEditor = (props: OwnProps) => {
                 {ScheduleManagerStrings[StringTemplates.DELETE_BUTTON]}
               </Button>
             )}
-            <Button variant="secondary" onClick={handleCancel}>
+            <Button variant="secondary" onClick={() => props.onPanelClosed()}>
               {ScheduleManagerStrings[StringTemplates.CANCEL_BUTTON]}
             </Button>
             <Button variant="primary" onClick={() => saveRule()} data-testid="save-rule-btn">
