@@ -31,6 +31,18 @@ export const loadScheduleData = async (): Promise<ScheduleManagerConfig | null> 
   return listSchedulesResponse;
 };
 
+export const referencedSchedules = (schedules: Schedule[], rule: Rule): string[] => {
+  const refSchedules = [] as string[];
+  if (schedules) {
+    schedules.forEach((schedule) => {
+      if (rule && schedule.rules.indexOf(rule.id) >= 0) {
+        refSchedules.push(schedule.name);
+      }
+    });
+  }
+
+  return refSchedules;
+};
 export const updateScheduleData = (newSchedule: Schedule | null, existingSchedule: Schedule | null): Schedule[] => {
   if (existingSchedule === null && newSchedule !== null) {
     // adding schedule

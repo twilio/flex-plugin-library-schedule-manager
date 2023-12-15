@@ -27,6 +27,7 @@ interface OwnProps {
   onPanelClosed: () => void;
   rules: Rule[];
   copy: boolean;
+  onDelete: () => void;
   showPanel: boolean;
   selectedSchedule: Schedule | null;
   onUpdateSchedule: (schedules: Schedule[]) => void;
@@ -169,7 +170,6 @@ const ScheduleEditor = (props: OwnProps) => {
   };
 
   const copySchedule = (schedule: Schedule) => {
-    console.log('schedule', schedule);
     const name = schedule.name + ` ${ScheduleManagerStrings[StringTemplates.NAME_COPY]}`;
 
     const scheduleCopy = {
@@ -177,22 +177,12 @@ const ScheduleEditor = (props: OwnProps) => {
       name,
     };
 
-    console.log('scheduleCopy', scheduleCopy);
     while (!isScheduleUnique(scheduleCopy, null)) {
       scheduleCopy.name = scheduleCopy.name + ` ${ScheduleManagerStrings[StringTemplates.NAME_COPY]}`;
     }
 
     const scheduleCopyData = updateScheduleData(scheduleCopy, null);
     props.onUpdateSchedule(scheduleCopyData);
-  };
-
-  const handleDelete = () => {
-    if (!props.selectedSchedule) {
-      return;
-    }
-
-    const newScheduleData = updateScheduleData(null, props.selectedSchedule);
-    props.onUpdateSchedule(newScheduleData);
   };
 
   return (
@@ -271,7 +261,7 @@ const ScheduleEditor = (props: OwnProps) => {
         <Box position={'fixed'} bottom={'space40'} right={'space60'}>
           <Stack orientation={'horizontal'} spacing="space30">
             {props.selectedSchedule !== null && (
-              <Button variant="destructive_link" onClick={handleDelete} data-testid="delete-btn">
+              <Button variant="destructive_link" onClick={() => props.onDelete()} data-testid="delete-btn">
                 {ScheduleManagerStrings[StringTemplates.DELETE_BUTTON]}
               </Button>
             )}

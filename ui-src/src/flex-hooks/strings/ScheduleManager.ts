@@ -106,9 +106,13 @@ export enum StringTemplates {
   ONE_TIME = 'SchMgrOneTime',
   DELETE_CONFIRM_SCHEDULE = 'SchMgrDeleteConfirmSchedule',
   DELETE_CONFIRM_RULE = 'SchMgrDeleteConfirmRule',
+  DELETE_CONFIRM_RULE_TITLE = 'SchMgrDeleteConfirmRuleTitle',
+  DELETE_CONFIRM_SCHEDULE_TITLE = 'SchMgrDeleteConfirmScheduleTitle',
   UNPUBLISHED_CHANGES_TEXT = 'SchMgrUnpublishedChangesText',
+  UNPUBLISHED_CHANGES_TEXT2 = 'SchMgrUnpublishedChangesText2',
   UNPUBLISHED_CHANGES = 'SchMgrUnpublishedChanges',
   SCHEDULE_RULES_HEADING = 'SchMgrScheduleRulesHeading',
+  RULES_DETAILS_TITLE = 'SchMgrRulesDetailsTitle',
 }
 
 export default {
@@ -121,7 +125,7 @@ export default {
   [StringTemplates.PUBLISH_FAILED]: 'Schedule publish failed.',
   [StringTemplates.PUBLISH_FAILED_ACTIVITY]: 'Switch to a non-available activity to publish.',
   [StringTemplates.PUBLISH_SUCCESS]: 'Successfully published schedules.',
-  [StringTemplates.PUBLISH_BUTTON]: 'Publish',
+  [StringTemplates.PUBLISH_BUTTON]: 'Publish changes',
   [StringTemplates.PUBLISH_DIALOG_TITLE]: 'Publishing schedules',
   [StringTemplates.PUBLISH_DIALOG_TEXT]: 'This may take a few moments, please wait...',
   [StringTemplates.LOAD_FAILED_TITLE]: 'Failed to load schedules',
@@ -223,7 +227,10 @@ export default {
   [StringTemplates.ONE_TIME]: 'One time',
   [StringTemplates.DELETE_CONFIRM_SCHEDULE]: 'Are you sure you want to delete schedule',
   [StringTemplates.DELETE_CONFIRM_RULE]: 'Are you sure you want to delete rule',
-  [StringTemplates.UNPUBLISHED_CHANGES_TEXT]:
-    'You have 1 unpublished change. Your changes will be lost. please click <strong>Publish changes</strong> to complete process',
+  [StringTemplates.DELETE_CONFIRM_RULE_TITLE]: 'Delete rule',
+  [StringTemplates.DELETE_CONFIRM_SCHEDULE_TITLE]: 'Delete schedule',
+  [StringTemplates.UNPUBLISHED_CHANGES_TEXT]: 'You have 1 unpublished change. Your changes will be lost. please click ',
+  [StringTemplates.UNPUBLISHED_CHANGES_TEXT2]: ' complete process.',
   [StringTemplates.UNPUBLISHED_CHANGES]: 'Unpublished changes',
+  [StringTemplates.RULES_DETAILS_TITLE]: 'Rule details',
 };

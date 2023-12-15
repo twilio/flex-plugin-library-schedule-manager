@@ -11,10 +11,10 @@ import ScheduleManagerStrings, { StringTemplates } from '../../flex-hooks/string
 import RRuleLanguage from '../../utils/RRuleLanguage';
 import { TableContainer } from '../ScheduleView/ScheduleViewStyles';
 import SchedulesAction from '../common/SchedulesAction';
-import { Badge, Flex } from '@twilio-paste/core';
+import { Badge, Flex, Toaster, useToaster } from '@twilio-paste/core';
 import { StatusBadge } from '@twilio-paste/status';
 import AlertBox from '../common/AlertBox';
-import { updateRuleData } from '../../utils/schedule-manager';
+import { updateRuleData, referencedSchedules } from '../../utils/schedule-manager';
 
 interface OwnProps {
   isLoading: boolean;
@@ -24,19 +24,13 @@ interface OwnProps {
 }
 
 const RuleDataTable = (props: OwnProps) => {
+  const toaster = useToaster();
   const [showPanel, setShowPanel] = useState(false);
   const [selectedRule, setSelectedRule] = useState(null as Rule | null);
   // const [openIndexNext, setOpenIndexNext] = useState(null as number | null);
   const [deleteRule, setDeleteRule] = useState(null as Rule | null);
   const [copyRule, setCopyRule] = useState(false);
 
-  // useEffect(() => {
-  //   if (openIndexNext) {
-  //     setCopySchedule(false);
-  //     setSelectedRule(props.rules[openIndexNext]);
-  //     setOpenIndexNext(null);
-  //   }
-  // }, [props.rules]);
 
   useEffect(() => {
     if (selectedRule !== null) {
@@ -62,9 +56,6 @@ const RuleDataTable = (props: OwnProps) => {
   };
 
   const onUpdateRule = (newRules: Rule[]) => {
-    // if (openIndex) {
-    //   setOpenIndexNext(openIndex);
-    // }
 
     props.updateRules(newRules);
     document.querySelector('#rule-data-table-root')?.scrollIntoView({ behavior: 'smooth' });
@@ -72,10 +63,6 @@ const RuleDataTable = (props: OwnProps) => {
     setSelectedRule(null);
     setCopyRule(false);
 
-    // if (!openIndex) {
-    //   setShowPanel(false);
-    //   setSelectedRule(null);
-    // }
   };
 
   const getRuleRecurrence = (rule: Rule): string => {
@@ -122,10 +109,6 @@ const RuleDataTable = (props: OwnProps) => {
       );
     } else {
       timeStr = ScheduleManagerStrings[StringTemplates.CLOSEDALLDAY];
-
-      // if (rule.closedReason && rule.closedReason !== 'closed') {
-      //   timeStr += ` (${rule.closedReason})`;
-      // }
       return (
         <Badge as="span" variant="warning">
           {timeStr}
@@ -171,8 +154,19 @@ const RuleDataTable = (props: OwnProps) => {
       return;
     }
 
+    const refSchedules = referencedSchedules(props.schedules, deleteRule as Rule);
+    if (refSchedules.length > 0) {
+      toaster.push({
+        message: ScheduleManagerStrings[StringTemplates.ERROR_RULE_REFERENCED] + ' ' + refSchedules.join(', '),
+        variant: 'error',
+        dismissAfter: 4000,
+      });
+      return;
+    }
     const newScheduleData = updateRuleData(null, deleteRule);
     onUpdateRule(newScheduleData);
+    setDeleteRule(null);
+    setSelectedRule(null);
   };
 
   return (
@@ -213,7 +207,7 @@ const RuleDataTable = (props: OwnProps) => {
             <ColumnDefinition
               key="recurrence-column"
               header={ScheduleManagerStrings[StringTemplates.DATE]}
-              sortingFn={(a: Rule, b: Rule) => (getRuleDate(a) > getRuleDate(b) ? 1 : -1)}
+              sortingFn={(a: Rule, b: Rule) => (getRuleRecurrence(a) > getRuleRecurrence(b) ? 1 : -1)}
               content={(item: Rule) => <span>{getRuleRecurrence(item)}</span>}
             />
             <ColumnDefinition
@@ -229,12 +223,14 @@ const RuleDataTable = (props: OwnProps) => {
             <ColumnDefinition
               key="actions-column"
               header=""
-              // sortingFn={(a: Rule, b: Rule) => (a.manualClose ? 1 : -1)}
               content={(item: Rule) => (
                 <SchedulesAction
                   onCopy={() => {
                     onEditOrClone(item, 'copy');
                   }}
+                  deleteDisabled={false}
+                  editDisabled={false}
+                  copyDisabled={false}
                   onDelete={() => setDeleteRule(item)}
                   onEdit={() => onEditOrClone(item, 'edit')}
                 />
@@ -243,11 +239,13 @@ const RuleDataTable = (props: OwnProps) => {
           </DataTable>
         </TableContainer>
       </div>
+      <Toaster {...toaster} />
       <RuleEditor
         onPanelClosed={onPanelClosed}
         showPanel={showPanel}
         copy={copyRule}
         schedules={props.schedules}
+        onDelete={() => setDeleteRule(selectedRule)}
         selectedRule={selectedRule}
         onUpdateRule={onUpdateRule}
       />
@@ -255,7 +253,7 @@ const RuleDataTable = (props: OwnProps) => {
         handleClose={() => setDeleteRule(null)}
         isOpen={!!deleteRule}
         handleSubmit={() => handleDeleteConfirmSubmit()}
-        title={'Delete schedule'}
+        title={ScheduleManagerStrings[StringTemplates.DELETE_CONFIRM_RULE_TITLE]}
       >
         <Flex>
           <Box as="p">{ScheduleManagerStrings[StringTemplates.DELETE_CONFIRM_RULE]}</Box>

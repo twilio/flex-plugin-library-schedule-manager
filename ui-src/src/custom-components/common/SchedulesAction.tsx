@@ -1,4 +1,4 @@
-import { Box, Button, Stack } from '@twilio-paste/core';
+import { Box, Button, Stack, Tooltip } from '@twilio-paste/core';
 import { EditIcon } from '@twilio-paste/icons/cjs/EditIcon';
 import { DeleteIcon } from '@twilio-paste/icons/cjs/DeleteIcon';
 import { CopyIcon } from '@twilio-paste/icons/cjs/CopyIcon';
@@ -8,17 +8,21 @@ import { Rule, Schedule } from '../../types/schedule-manager';
 interface SchedulesAction {
   onCopy: () => void;
   onEdit: () => void;
+  deleteDisabled: boolean;
+  editDisabled: boolean;
+  copyDisabled: boolean;
   onDelete: () => void;
 }
 
 const SchedulesAction: React.FC<SchedulesAction> = (props) => {
-  const { onCopy, onEdit, onDelete } = props;
+  const { onCopy, onEdit, onDelete, deleteDisabled, editDisabled, copyDisabled } = props;
   return (
     <Box display={'flex'} justifyContent={'flex-end'} marginRight={'space30'}>
       <Stack orientation="horizontal" spacing="space50">
         <Button
           variant="link"
           size="small"
+          disabled={copyDisabled}
           onClick={() => {
             onCopy();
           }}
@@ -28,6 +32,7 @@ const SchedulesAction: React.FC<SchedulesAction> = (props) => {
         <Button
           variant="link"
           size="small"
+          disabled={editDisabled}
           onClick={() => {
             onEdit();
           }}
@@ -37,6 +42,7 @@ const SchedulesAction: React.FC<SchedulesAction> = (props) => {
         <Button
           variant="link"
           size="small"
+          disabled={deleteDisabled}
           onClick={() => {
             onDelete();
           }}

@@ -17,7 +17,7 @@ import { TimePicker } from '@twilio-paste/core/time-picker';
 import { RRule, Frequency, ByWeekday } from 'rrule';
 import { v4 as uuidv4 } from 'uuid';
 
-import { isRuleUnique, updateRuleData } from '../../utils/schedule-manager';
+import { isRuleUnique, referencedSchedules, updateRuleData } from '../../utils/schedule-manager';
 import { Rule, Schedule } from '../../types/schedule-manager';
 import ScheduleManagerStrings, { StringTemplates } from '../../flex-hooks/strings/ScheduleManager';
 import EditorPanel from '../common/EditorPanel';
@@ -26,6 +26,7 @@ interface OwnProps {
   onPanelClosed: () => void;
   showPanel: boolean;
   copy: boolean;
+  onDelete: () => void;
   schedules: Schedule[];
   selectedRule: Rule | null;
   onUpdateRule: (rules: Rule[]) => void;
@@ -483,22 +484,16 @@ const RuleEditor = (props: OwnProps) => {
     }
 
     // Check if rule is referenced. If so, fail!
-    const refSchedules = [] as string[];
-    if (props.schedules) {
-      props.schedules.forEach((schedule) => {
-        if (props.selectedRule && schedule.rules.indexOf(props.selectedRule.id) >= 0) {
-          refSchedules.push(schedule.name);
-        }
-      });
-    }
+    const refSchedules = referencedSchedules(props.schedules, props.selectedRule as Rule);
 
     if (refSchedules.length > 0) {
       setError(ScheduleManagerStrings[StringTemplates.ERROR_RULE_REFERENCED] + ' ' + refSchedules.join(', '));
       return;
     }
 
-    const newRuleData = updateRuleData(null, props.selectedRule);
-    props.onUpdateRule(newRuleData);
+    props.onDelete();
+    // const newRuleData = updateRuleData(null, props.selectedRule);
+    // props.onUpdateRule(newRuleData);
   };
 
   return (
@@ -693,7 +688,7 @@ const RuleEditor = (props: OwnProps) => {
         <Box position={'fixed'} bottom={'space40'} right={'space60'}>
           <Stack orientation={'horizontal'} spacing="space30">
             {props.selectedRule !== null && (
-              <Button variant="destructive_secondary" onClick={handleDelete} data-testid="delete-rule-btn">
+              <Button variant="destructive_link" onClick={handleDelete} data-testid="delete-rule-btn">
                 {ScheduleManagerStrings[StringTemplates.DELETE_BUTTON]}
               </Button>
             )}

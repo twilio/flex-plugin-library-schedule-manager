@@ -36,13 +36,6 @@ const ScheduleDataTable = (props: OwnProps) => {
     setStatusTimestamp(`${props.updated.toLocaleTimeString()} (${Intl.DateTimeFormat().resolvedOptions().timeZone})`);
   }, [props.updated]);
 
-  // useEffect(() => {
-  //   if (openIndexNext) {
-  //     setSelectedSchedule(props.schedules[openIndexNext]);
-  //     setOpenIndexNext(null);
-  //   }
-  // }, [props.schedules]);
-
   useEffect(() => {
     if (selectedSchedule !== null) {
       setShowPanel(true);
@@ -64,21 +57,12 @@ const ScheduleDataTable = (props: OwnProps) => {
   };
 
   const onUpdateSchedule = (newSchedules: Schedule[]) => {
-    // if (openIndex) {
-    //   setOpenIndexNext(openIndex);
-    // }
-
-    console.log(newSchedules);
     props.updateSchedules(newSchedules);
     document.querySelector('#schedule-data-table-root')?.scrollIntoView({ behavior: 'smooth' });
 
     setShowPanel(false);
     setSelectedSchedule(null);
     setCopySchedule(false);
-    // if (!openIndex) {
-    //   setShowPanel(false);
-    //   setSelectedSchedule(null);
-    // }
   };
 
   const onEditOrClone = (item: Schedule, type: string) => {
@@ -149,6 +133,7 @@ const ScheduleDataTable = (props: OwnProps) => {
     const newScheduleData = updateScheduleData(null, deleteSchedule);
     onUpdateSchedule(newScheduleData);
     setDeleteSchedule(null);
+    setSelectedSchedule(null);
   };
 
   return (
@@ -195,7 +180,7 @@ const ScheduleDataTable = (props: OwnProps) => {
                       <PopoverButton variant="reset">{trimmed}</PopoverButton>
                       <Popover aria-label="Rules Popover">
                         <Box as="h3" fontWeight={'fontWeightSemibold'} fontSize={'fontSize50'} marginBottom={'space30'}>
-                          Rules details
+                          {ScheduleManagerStrings[StringTemplates.RULES_DETAILS_TITLE]}
                         </Box>
                         <Box as="span">{ruleStr}</Box>
                       </Popover>
@@ -215,7 +200,6 @@ const ScheduleDataTable = (props: OwnProps) => {
             <ColumnDefinition
               key="publish-status-column"
               header={ScheduleManagerStrings[StringTemplates.COLUMN_PUBLISHSTATUS]}
-              sortingFn={(a: Schedule, b: Schedule) => (a.manualClose ? 1 : -1)}
               content={(item: Schedule) => (
                 <StatusBadge as="span" variant="ProcessSuccess">
                   Published
@@ -225,12 +209,14 @@ const ScheduleDataTable = (props: OwnProps) => {
             <ColumnDefinition
               key="actions-column"
               header=""
-              sortingFn={(a: Schedule, b: Schedule) => (a.manualClose ? 1 : -1)}
               content={(item: Schedule) => (
                 <SchedulesAction
                   onCopy={() => {
                     onEditOrClone(item, 'copy');
                   }}
+                  deleteDisabled={false}
+                  editDisabled={false}
+                  copyDisabled={false}
                   onDelete={() => setDeleteSchedule(item)}
                   onEdit={() => onEditOrClone(item, 'edit')}
                 />
@@ -243,6 +229,7 @@ const ScheduleDataTable = (props: OwnProps) => {
         onPanelClosed={onPanelClosed}
         rules={props.rules}
         showPanel={showPanel}
+        onDelete={() => setDeleteSchedule(selectedSchedule)}
         copy={copySchedule}
         selectedSchedule={selectedSchedule}
         onUpdateSchedule={onUpdateSchedule}
@@ -251,7 +238,7 @@ const ScheduleDataTable = (props: OwnProps) => {
         handleClose={() => setDeleteSchedule(null)}
         isOpen={!!deleteSchedule}
         handleSubmit={() => handleDeleteConfirmSubmit()}
-        title={'Delete schedule'}
+        title={ScheduleManagerStrings[StringTemplates.DELETE_CONFIRM_SCHEDULE_TITLE]}
       >
         <Flex>
           <Box as="p">{ScheduleManagerStrings[StringTemplates.DELETE_CONFIRM_SCHEDULE]}</Box>

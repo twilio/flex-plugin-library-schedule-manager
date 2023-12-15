@@ -119,7 +119,11 @@ const ScheduleView = ({}) => {
         </AlertContainer> */}
         <Callout variant="warning">
           <CalloutHeading as="h2">{ScheduleManagerStrings[StringTemplates.UNPUBLISHED_CHANGES]}</CalloutHeading>
-          <CalloutText>{ScheduleManagerStrings[StringTemplates.UNPUBLISHED_CHANGES_TEXT]}</CalloutText>
+          <CalloutText>
+            {ScheduleManagerStrings[StringTemplates.UNPUBLISHED_CHANGES_TEXT]}
+            <strong>{ScheduleManagerStrings[StringTemplates.PUBLISH_BUTTON]}</strong>
+            {ScheduleManagerStrings[StringTemplates.UNPUBLISHED_CHANGES_TEXT2]}
+          </CalloutText>
         </Callout>
       </ScheduleViewHeader>
       <Tabs
@@ -146,16 +150,10 @@ const ScheduleView = ({}) => {
             {ScheduleManagerStrings[StringTemplates.PUBLISH_BUTTON]}
           </Button>
           <Button variant="secondary" onClick={publish}>
-            Cancel
+            {ScheduleManagerStrings[StringTemplates.CANCEL_BUTTON]}
           </Button>
         </Stack>
       </PublishActionContainer>
-      {/* <EditorPanel
-        onPanelClosed={onPanelClosed}
-        showPanel={showPanel}
-        title={title}
-        children={title.indexOf('rule') > -1 ? <RuleEditor /> : <ScheduleEditor />}
-      /> */}
       <Modal isOpen={publishState === 1} onDismiss={() => {}} size="default" ariaLabelledby="">
         <ModalBody>
           <PublishModalContent>
