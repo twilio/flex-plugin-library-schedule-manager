@@ -8,6 +8,8 @@ import { Spinner } from '@twilio-paste/core/spinner';
 import { Stack } from '@twilio-paste/core/stack';
 import { Text } from '@twilio-paste/core/text';
 import AlertBox from '../common/AlertBox';
+import { analytics, Event } from '../../utils/Analytics';
+
 import {
   PublishModalContent,
   ScheduleViewWrapper,
@@ -36,6 +38,16 @@ const ScheduleView = ({}) => {
   const [publishState, setPublishState] = useState(0); // 0: normal; 1: publish in progress; 2: publish version error; 3: publish failed; 4: in available activity
   const [isDirty, setIsDirty] = useState(false);
   const [cancelSchedule, setCancelSchedule] = useState(false);
+
+  useEffect(() => {
+    listSchedules();
+    analytics.page(Event.OPHRS_SCHEDULE_LIST);
+    return () => {
+      if (publishState == 1) {
+        Notifications.showNotification(NotificationIds.PUBLISH_ABORTED);
+      }
+    };
+  }, []);
 
   const listSchedules = async () => {
     setIsLoading(true);
@@ -86,6 +98,7 @@ const ScheduleView = ({}) => {
   };
 
   const publish = async () => {
+    analytics.track(Event.OPHRS_PUBLISH_SCHEDULE);
     setPublishState(1);
     const publishResult = await publishSchedules();
     setPublishState(publishResult);

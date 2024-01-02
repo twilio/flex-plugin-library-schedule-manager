@@ -13,6 +13,7 @@ import { StatusBadge } from '@twilio-paste/status';
 import SchedulesAction from '../common/SchedulesAction';
 import AlertBox from '../common/AlertBox';
 import { updateScheduleData } from '../../utils/schedule-manager';
+import { analytics, Event} from '../../utils/Analytics';
 
 interface OwnProps {
   isLoading: boolean;
@@ -43,6 +44,7 @@ const ScheduleDataTable = (props: OwnProps) => {
   }, [selectedSchedule]);
 
   const createScheduleClick = () => {
+    analytics.track(Event.OPHRS_CREATE_SCHEDULE);
     setSelectedSchedule(null);
     setShowPanel(true);
   };
@@ -83,7 +85,15 @@ const ScheduleDataTable = (props: OwnProps) => {
 
   const onEditOrClone = (item: Schedule, type: string) => {
     if (type == 'copy') {
+      analytics.track(Event.OPHRS_DUPLICATE_SCHEDULE,{
+        scheduleName: item,
+      });
       setCopySchedule(true);
+    }
+    if (type == 'edit') {
+      analytics.track(Event.OPHRS_EDIT_SCHEDULE, {
+        scheduleName: item,
+      });
     }
     setSelectedSchedule(item);
   };
@@ -235,7 +245,12 @@ const ScheduleDataTable = (props: OwnProps) => {
                   deleteDisabled={false}
                   editDisabled={false}
                   copyDisabled={false}
-                  onDelete={() => setDeleteSchedule(item)}
+                  onDelete={() => {
+                    analytics.track(Event.OPHRS_DELETE_SCHEDULE, {
+                      scheduleName: item,
+                    });
+                    setDeleteSchedule(item);
+                  }}
                   onEdit={() => onEditOrClone(item, 'edit')}
                 />
               )}
@@ -247,7 +262,12 @@ const ScheduleDataTable = (props: OwnProps) => {
         onPanelClosed={onPanelClosed}
         rules={props.rules}
         showPanel={showPanel}
-        onDelete={() => setDeleteSchedule(selectedSchedule)}
+        onDelete={() => {
+          analytics.track(Event.OPHRS_DELETE_SCHEDULE, {
+            scheduleName: selectedSchedule,
+          });
+          setDeleteSchedule(selectedSchedule);
+        }}
         copy={copySchedule}
         selectedSchedule={selectedSchedule}
         onUpdateSchedule={onUpdateSchedule}

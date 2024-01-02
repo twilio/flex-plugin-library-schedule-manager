@@ -16,6 +16,7 @@ import EditorPanel from '../common/EditorPanel';
 import { SortableList } from '../common/Sortable/SortableList';
 import { RuleDragHandle } from './RuleDragHandle';
 import { RulesContainer } from '../ScheduleView/ScheduleViewStyles';
+import { analytics, Event } from '../../utils/Analytics';
 
 interface OwnProps {
   onPanelClosed: () => void;
@@ -156,6 +157,10 @@ const ScheduleEditor = (props: OwnProps) => {
     };
 
     newSchedule.status = evaluateSchedule(newSchedule, props.rules);
+
+    analytics.track(Event.OPHRS_SAVE_SCHEDULE, {
+      scheduleName: name,
+    });
 
     if (isScheduleUnique(newSchedule, props.selectedSchedule)) {
       setError('');
