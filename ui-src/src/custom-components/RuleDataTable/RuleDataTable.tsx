@@ -34,7 +34,7 @@ const RuleDataTable = (props: OwnProps) => {
 
   useEffect(() => {
     analytics.page(Event.OPHRS_RULE_LIST);
-  });
+  }, []);
 
   useEffect(() => {
     if (selectedRule !== null) {
