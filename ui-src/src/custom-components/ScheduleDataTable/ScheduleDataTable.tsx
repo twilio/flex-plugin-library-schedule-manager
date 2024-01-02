@@ -56,6 +56,22 @@ const ScheduleDataTable = (props: OwnProps) => {
     setSelectedSchedule(item);
   };
 
+  const getPublishedStatus = (newSchedule: Schedule) => {
+    if (newSchedule.isPublished === false || newSchedule.isDeleted === true) {
+      return (
+        <StatusBadge as="span" variant="ProcessWarning">
+          Not published
+        </StatusBadge>
+      );
+    } else {
+      return (
+        <StatusBadge as="span" variant="ProcessSuccess">
+          Published
+        </StatusBadge>
+      );
+    }
+  };
+
   const onUpdateSchedule = (newSchedules: Schedule[]) => {
     props.updateSchedules(newSchedules);
     document.querySelector('#schedule-data-table-root')?.scrollIntoView({ behavior: 'smooth' });
@@ -73,41 +89,39 @@ const ScheduleDataTable = (props: OwnProps) => {
   };
 
   const getScheduleStatus = (schedule: Schedule): any => {
-    if (!schedule.status) {
-      return ScheduleManagerStrings[StringTemplates.STATUS_PENDING];
-    }
+    if (schedule.status) {
+      const { isOpen, closedReason } = schedule.status;
 
-    const { isOpen, closedReason } = schedule.status;
-
-    if (schedule.manualClose) {
-      return (
-        <Tooltip text={closedReason}>
-          <Badge as="span" variant="warning">
-            {ScheduleManagerStrings[StringTemplates.MANUALLYCLOSE]}
+      if (schedule.manualClose) {
+        return (
+          <Tooltip text={closedReason}>
+            <Badge as="span" variant="warning">
+              {ScheduleManagerStrings[StringTemplates.MANUALLYCLOSE]}
+            </Badge>
+          </Tooltip>
+        );
+      }
+      if (isOpen) {
+        return (
+          <Badge as="span" variant="success">
+            {ScheduleManagerStrings[StringTemplates.OPEN]}
           </Badge>
-        </Tooltip>
-      );
-    }
-    if (isOpen) {
-      return (
-        <Badge as="span" variant="success">
-          {ScheduleManagerStrings[StringTemplates.OPEN]}
-        </Badge>
-      );
-    }
+        );
+      }
 
-    if (closedReason.toLowerCase() === 'closed') {
-      return (
-        <Badge as="span" variant="warning">
-          {ScheduleManagerStrings[StringTemplates.CLOSED]}
-        </Badge>
-      );
-    } else {
-      return (
-        <Badge as="span" variant="warning">
-          {`${ScheduleManagerStrings[StringTemplates.CLOSED]} (${closedReason})`}
-        </Badge>
-      );
+      if (closedReason.toLowerCase() === 'closed') {
+        return (
+          <Badge as="span" variant="warning">
+            {ScheduleManagerStrings[StringTemplates.CLOSED]}
+          </Badge>
+        );
+      } else {
+        return (
+          <Badge as="span" variant="warning">
+            {`${ScheduleManagerStrings[StringTemplates.CLOSED]} (${closedReason})`}
+          </Badge>
+        );
+      }
     }
   };
 
@@ -130,8 +144,9 @@ const ScheduleDataTable = (props: OwnProps) => {
       return;
     }
 
+    deleteSchedule.isDeleted = true;
     const newScheduleData = updateScheduleData(null, deleteSchedule);
-    onUpdateSchedule(newScheduleData);
+    onUpdateSchedule([...newScheduleData]);
     setDeleteSchedule(null);
     setSelectedSchedule(null);
   };
@@ -200,11 +215,14 @@ const ScheduleDataTable = (props: OwnProps) => {
             <ColumnDefinition
               key="publish-status-column"
               header={ScheduleManagerStrings[StringTemplates.COLUMN_PUBLISHSTATUS]}
-              content={(item: Schedule) => (
-                <StatusBadge as="span" variant="ProcessSuccess">
-                  Published
-                </StatusBadge>
-              )}
+              // content={(item: Schedule) => {
+              //   return (
+              //     <StatusBadge as="span" variant="ProcessSuccess">
+              //       Published
+              //     </StatusBadge>
+              //   );
+              // }}
+              content={(item: Schedule) => getPublishedStatus(item)}
             />
             <ColumnDefinition
               key="actions-column"

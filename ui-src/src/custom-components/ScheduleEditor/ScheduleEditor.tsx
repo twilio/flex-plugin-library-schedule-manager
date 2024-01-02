@@ -1,21 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import tzdata from 'tzdata';
-import { ColumnDefinition, DataTable, SidePanel } from '@twilio/flex-ui';
 import { Alert } from '@twilio-paste/core/alert';
 import { Button } from '@twilio-paste/core/button';
 import { Box } from '@twilio-paste/core/box';
 import { Checkbox } from '@twilio-paste/core/checkbox';
 import { Combobox, UseComboboxState, useCombobox } from '@twilio-paste/core/combobox';
-import { Heading } from '@twilio-paste/core/heading';
-import { HelpText } from '@twilio-paste/core/help-text';
 import { Input } from '@twilio-paste/core/input';
 import { Label } from '@twilio-paste/core/label';
 import { Stack } from '@twilio-paste/core/stack';
-import { ChevronDownIcon } from '@twilio-paste/icons/cjs/ChevronDownIcon';
-import { ChevronUpIcon } from '@twilio-paste/icons/cjs/ChevronUpIcon';
-import { DeleteIcon } from '@twilio-paste/icons/cjs/DeleteIcon';
 
-import { isScheduleUnique, updateScheduleData } from '../../utils/schedule-manager';
+import { isScheduleUnique, updateScheduleData, evaluateSchedule } from '../../utils/schedule-manager';
 import { Schedule, Rule } from '../../types/schedule-manager';
 import ScheduleManagerStrings, { StringTemplates } from '../../flex-hooks/strings/ScheduleManager';
 import EditorPanel from '../common/EditorPanel';
@@ -153,7 +147,15 @@ const ScheduleEditor = (props: OwnProps) => {
       return;
     }
 
-    const newSchedule = { name, manualClose, timeZone, rules: rules.map((rule) => rule.id) };
+    const newSchedule: Schedule = {
+      name,
+      manualClose,
+      timeZone,
+      rules: rules.map((rule) => rule.id),
+      isPublished: false,
+    };
+
+    newSchedule.status = evaluateSchedule(newSchedule, props.rules);
 
     if (isScheduleUnique(newSchedule, props.selectedSchedule)) {
       setError('');

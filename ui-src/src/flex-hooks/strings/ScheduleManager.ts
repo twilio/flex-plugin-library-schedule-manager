@@ -113,10 +113,14 @@ export enum StringTemplates {
   UNPUBLISHED_CHANGES = 'SchMgrUnpublishedChanges',
   SCHEDULE_RULES_HEADING = 'SchMgrScheduleRulesHeading',
   RULES_DETAILS_TITLE = 'SchMgrRulesDetailsTitle',
+  CANCEL_PUBLISHING_TEXT = 'SchMgrCancelPublishingTitle',
+  CANCEL_PUBLISHING_TEXT2 = 'SchMgrCancelPublishingText2',
+  CANCEL_PUBLISHING_TEXT3 = 'SchMgrCancelPublishingText3',
+  CANCEL_PUBLISHING_TEXT4 = 'SchMgrCancelPublishingText4',
 }
 
 export default {
-  [StringTemplates.SCHEDULE_MANAGER_TITLE]: 'Schedule Manager',
+  [StringTemplates.SCHEDULE_MANAGER_TITLE]: 'Operating hours',
   [StringTemplates.PUBLISH_ABORTED]: 'The schedule publish was aborted. Your changes may not have been saved.',
   [StringTemplates.PUBLISH_INFLIGHT]:
     'Another schedule publish is in progress. Publishing now will overwrite other changes.',
@@ -132,8 +136,8 @@ export default {
   [StringTemplates.LOAD_FAILED_TEXT]: 'Please reload and try again.',
   [StringTemplates.TAB_RULES]: 'Rules',
   [StringTemplates.TAB_SCHEDULES]: 'Schedules',
-  [StringTemplates.CREATE_SCHEDULE_BUTTON]: 'Create Schedule',
-  [StringTemplates.CREATE_RULE_BUTTON]: 'Create Rule',
+  [StringTemplates.CREATE_SCHEDULE_BUTTON]: 'Create new schedule',
+  [StringTemplates.CREATE_RULE_BUTTON]: 'Create new rule',
   [StringTemplates.OPEN]: 'Open',
   [StringTemplates.CLOSED]: 'Closed',
   [StringTemplates.CLOSEDALLDAY]: 'Closed all day',
@@ -229,8 +233,12 @@ export default {
   [StringTemplates.DELETE_CONFIRM_RULE]: 'Are you sure you want to delete rule',
   [StringTemplates.DELETE_CONFIRM_RULE_TITLE]: 'Delete rule',
   [StringTemplates.DELETE_CONFIRM_SCHEDULE_TITLE]: 'Delete schedule',
-  [StringTemplates.UNPUBLISHED_CHANGES_TEXT]: 'You have 1 unpublished change. Your changes will be lost. please click ',
+  [StringTemplates.UNPUBLISHED_CHANGES_TEXT]: 'You have unpublished changes. Your changes will be lost. please click ',
   [StringTemplates.UNPUBLISHED_CHANGES_TEXT2]: ' complete process.',
   [StringTemplates.UNPUBLISHED_CHANGES]: 'Unpublished changes',
   [StringTemplates.RULES_DETAILS_TITLE]: 'Rule details',
+  [StringTemplates.CANCEL_PUBLISHING_TEXT]: 'Cancel Publishing?',
+  [StringTemplates.CANCEL_PUBLISHING_TEXT2]: 'Are you sure you want to cancel? You have',
+  [StringTemplates.CANCEL_PUBLISHING_TEXT3]: 'unpublished changes',
+  [StringTemplates.CANCEL_PUBLISHING_TEXT4]: 'that will be lost, you need to Publish the changes to complete the process.',
 };

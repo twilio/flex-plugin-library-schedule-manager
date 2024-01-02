@@ -6,11 +6,8 @@ import { Heading } from '@twilio-paste/core/heading';
 import { Modal, ModalBody } from '@twilio-paste/core/modal';
 import { Spinner } from '@twilio-paste/core/spinner';
 import { Stack } from '@twilio-paste/core/stack';
-import { WarningIcon } from '@twilio-paste/icons/cjs/WarningIcon';
 import { Text } from '@twilio-paste/core/text';
-import RuleEditor from '../RuleEditor/RuleEditor';
-import ScheduleEditor from '../ScheduleEditor/ScheduleEditor';
-
+import AlertBox from '../common/AlertBox';
 import {
   PublishModalContent,
   ScheduleViewWrapper,
@@ -24,12 +21,11 @@ import { Rule, Schedule } from '../../types/schedule-manager';
 import { loadScheduleData, publishSchedules } from '../../utils/schedule-manager';
 import { NotificationIds } from '../../flex-hooks/notifications/ScheduleManager';
 import ScheduleManagerStrings, { StringTemplates } from '../../flex-hooks/strings/ScheduleManager';
-import { Alert } from '@twilio-paste/core/alert';
 import { Box, Callout, CalloutHeading, CalloutText } from '@twilio-paste/core';
-import EditorPanel from 'custom-components/common/EditorPanel';
 
 const ScheduleView = ({}) => {
   const [isLoading, setIsLoading] = useState(true);
+  const [isChangesPresent, setChangesPresent] = useState(false);
   const [rules, setRules] = useState([] as Rule[]);
   const [schedules, setSchedules] = useState([] as Schedule[]);
   const [updated, setUpdated] = useState(new Date());
@@ -39,16 +35,7 @@ const ScheduleView = ({}) => {
   const [loadFailed, setLoadFailed] = useState(false);
   const [publishState, setPublishState] = useState(0); // 0: normal; 1: publish in progress; 2: publish version error; 3: publish failed; 4: in available activity
   const [isDirty, setIsDirty] = useState(false);
-
-  useEffect(() => {
-    listSchedules();
-
-    return () => {
-      if (publishState == 1) {
-        Notifications.showNotification(NotificationIds.PUBLISH_ABORTED);
-      }
-    };
-  }, []);
+  const [cancelSchedule, setCancelSchedule] = useState(false);
 
   const listSchedules = async () => {
     setIsLoading(true);
@@ -68,14 +55,34 @@ const ScheduleView = ({}) => {
     setIsLoading(false);
   };
 
+  useEffect(() => {
+    listSchedules();
+
+    return () => {
+      if (publishState == 1) {
+        Notifications.showNotification(NotificationIds.PUBLISH_ABORTED);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    const unpublishedSchedules = schedules.filter(
+      (schedule) => schedule.isPublished === false || schedule.isDeleted === true,
+    );
+    console.log(unpublishedSchedules);
+    const unpublishedRules = rules.filter((rule) => rule.isPublished === false || rule.isDeleted === true);
+    console.log(unpublishedSchedules);
+    setChangesPresent(unpublishedSchedules.length > 0 || unpublishedRules.length > 0);
+  }, [schedules, rules]);
+
   const updateSchedules = (newSchedules: Schedule[]) => {
     setSchedules(newSchedules);
-    setIsDirty(true);
+    // setIsDirty(true);
   };
 
   const updateRules = (newRules: Rule[]) => {
     setRules(newRules);
-    setIsDirty(true);
+    // setIsDirty(true);
   };
 
   const publish = async () => {
@@ -87,6 +94,11 @@ const ScheduleView = ({}) => {
       setIsDirty(false);
       await listSchedules();
     }
+  };
+
+  const handleCancelConfirmSubmit = (): void => {
+    listSchedules();
+    setCancelSchedule(false);
   };
 
   return (
@@ -117,14 +129,16 @@ const ScheduleView = ({}) => {
             </Text>
           </Alert>
         </AlertContainer> */}
-        <Callout variant="warning">
-          <CalloutHeading as="h2">{ScheduleManagerStrings[StringTemplates.UNPUBLISHED_CHANGES]}</CalloutHeading>
-          <CalloutText>
-            {ScheduleManagerStrings[StringTemplates.UNPUBLISHED_CHANGES_TEXT]}
-            <strong>{ScheduleManagerStrings[StringTemplates.PUBLISH_BUTTON]}</strong>
-            {ScheduleManagerStrings[StringTemplates.UNPUBLISHED_CHANGES_TEXT2]}
-          </CalloutText>
-        </Callout>
+        {isChangesPresent && (
+          <Callout variant="warning">
+            <CalloutHeading as="h2">{ScheduleManagerStrings[StringTemplates.UNPUBLISHED_CHANGES]}</CalloutHeading>
+            <CalloutText>
+              {ScheduleManagerStrings[StringTemplates.UNPUBLISHED_CHANGES_TEXT]}
+              <strong>{ScheduleManagerStrings[StringTemplates.PUBLISH_BUTTON]}</strong>
+              {ScheduleManagerStrings[StringTemplates.UNPUBLISHED_CHANGES_TEXT2]}
+            </CalloutText>
+          </Callout>
+        )}
       </ScheduleViewHeader>
       <Tabs
         key="operating-hours-tabs"
@@ -146,10 +160,10 @@ const ScheduleView = ({}) => {
       </Tabs>
       <PublishActionContainer>
         <Stack orientation="horizontal" spacing="space30">
-          <Button variant="primary" onClick={publish}>
+          <Button variant="primary" onClick={publish} disabled={!isChangesPresent}>
             {ScheduleManagerStrings[StringTemplates.PUBLISH_BUTTON]}
           </Button>
-          <Button variant="secondary" onClick={publish}>
+          <Button variant="secondary" onClick={() => setCancelSchedule(true)} disabled={!isChangesPresent}>
             {ScheduleManagerStrings[StringTemplates.CANCEL_BUTTON]}
           </Button>
         </Stack>
@@ -181,6 +195,24 @@ const ScheduleView = ({}) => {
           </PublishModalContent>
         </ModalBody>
       </Modal>
+      <AlertBox
+        handleClose={() => {
+          setCancelSchedule(false);
+        }}
+        isOpen={!!cancelSchedule}
+        handleSubmit={() => handleCancelConfirmSubmit()}
+        title={ScheduleManagerStrings[StringTemplates.CANCEL_PUBLISHING_TEXT]}
+      >
+        <Box as="div" margin={'space10'}>
+          <Box as="span">{ScheduleManagerStrings[StringTemplates.CANCEL_PUBLISHING_TEXT2]}</Box>
+          <Box as="strong" fontWeight={'fontWeightSemibold'} marginLeft={'space10'}>
+            {ScheduleManagerStrings[StringTemplates.CANCEL_PUBLISHING_TEXT3]}
+          </Box>
+          <Box as="span" marginLeft={'space10'}>
+            {ScheduleManagerStrings[StringTemplates.CANCEL_PUBLISHING_TEXT4]}
+          </Box>
+        </Box>
+      </AlertBox>
     </ScheduleViewWrapper>
   );
 };

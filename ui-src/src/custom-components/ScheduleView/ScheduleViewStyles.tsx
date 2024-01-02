@@ -32,7 +32,7 @@ export const ScheduleViewHeader = styled('div')`
 export const RulesContainer = styled('div')`
   width: 100%;
   overflow: auto;
-  max-height: 40vh;
+  max-height: 25vh;
 
   h4 {
     background-color: rgb(244, 244, 246);
@@ -53,7 +53,7 @@ export const PublishActionContainer = styled('div')`
 
 export const TableContainer = styled('div')`
   overflow: auto;
-  height: 50%;
+  height: 80%;
   margin: 0 1em;
   box-sizing: border-box;
 

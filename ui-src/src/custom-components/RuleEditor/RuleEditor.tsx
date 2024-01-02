@@ -449,8 +449,9 @@ const RuleEditor = (props: OwnProps) => {
 
     if (isRuleUnique(newRule, props.selectedRule)) {
       setError('');
+      newRule.isPublished = false;
       const newRuleData = updateRuleData(newRule, props.selectedRule);
-
+      
       if (props.copy) {
         copyRule(newRule);
       } else {

@@ -117,6 +117,22 @@ const RuleDataTable = (props: OwnProps) => {
     }
   };
 
+  const getPublishedStatus = (newRule: Rule) => {
+    if (newRule.isPublished === false || newRule.isDeleted === true) {
+      return (
+        <StatusBadge as="span" variant="ProcessWarning">
+          Not published
+        </StatusBadge>
+      );
+    } else {
+      return (
+        <StatusBadge as="span" variant="ProcessSuccess">
+          Published
+        </StatusBadge>
+      );
+    }
+  };
+
   const getRuleDate = (rule: Rule): string => {
     let dateStr = ScheduleManagerStrings[StringTemplates.ANY_DAY];
 
@@ -163,8 +179,9 @@ const RuleDataTable = (props: OwnProps) => {
       });
       return;
     }
+    deleteRule.isDeleted = true;
     const newScheduleData = updateRuleData(null, deleteRule);
-    onUpdateRule(newScheduleData);
+    onUpdateRule([...newScheduleData]);
     setDeleteRule(null);
     setSelectedRule(null);
   };
@@ -213,12 +230,7 @@ const RuleDataTable = (props: OwnProps) => {
             <ColumnDefinition
               key="publish-status-column"
               header={ScheduleManagerStrings[StringTemplates.COLUMN_PUBLISHSTATUS]}
-              // sortingFn={(a: Rule, b: Rule) => (a.manualClose ? 1 : -1)}
-              content={(item: Rule) => (
-                <StatusBadge as="span" variant="ProcessSuccess">
-                  Published
-                </StatusBadge>
-              )}
+              content={(item: Rule) => getPublishedStatus(item)}
             />
             <ColumnDefinition
               key="actions-column"

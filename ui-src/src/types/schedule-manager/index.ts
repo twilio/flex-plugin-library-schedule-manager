@@ -8,6 +8,8 @@ export interface Rule {
   endDate: string;
   startTime: string;
   endTime: string;
+  isPublished?: boolean;
+  isDeleted?: boolean;
 }
 
 export interface Schedule {
@@ -15,6 +17,8 @@ export interface Schedule {
   manualClose: boolean;
   timeZone: string;
   rules: string[];
+  isPublished?: boolean;
+  isDeleted?: boolean;
   status?: CheckScheduleResponse; // only returned by list-schedules
 }
 
