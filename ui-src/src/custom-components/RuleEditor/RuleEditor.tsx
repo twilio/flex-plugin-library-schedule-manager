@@ -21,6 +21,7 @@ import { isRuleUnique, referencedSchedules, updateRuleData } from '../../utils/s
 import { Rule, Schedule } from '../../types/schedule-manager';
 import ScheduleManagerStrings, { StringTemplates } from '../../flex-hooks/strings/ScheduleManager';
 import EditorPanel from '../common/EditorPanel';
+import { analytics, Event } from '../../utils/Analytics';
 
 interface OwnProps {
   onPanelClosed: () => void;
@@ -310,6 +311,9 @@ const RuleEditor = (props: OwnProps) => {
         return;
       }
     }
+    analytics.track(Event.OPHRS_SAVE_RULE, {
+      ruleName: name,
+    });
 
     switch (recurrence) {
       case 'none':

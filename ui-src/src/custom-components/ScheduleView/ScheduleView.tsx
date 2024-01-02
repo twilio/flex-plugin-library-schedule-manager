@@ -10,6 +10,7 @@ import { WarningIcon } from '@twilio-paste/icons/cjs/WarningIcon';
 import { Text } from '@twilio-paste/core/text';
 import RuleEditor from '../RuleEditor/RuleEditor';
 import ScheduleEditor from '../ScheduleEditor/ScheduleEditor';
+import { analytics, Event } from '../../utils/Analytics';
 
 import {
   PublishModalContent,
@@ -42,7 +43,7 @@ const ScheduleView = ({}) => {
 
   useEffect(() => {
     listSchedules();
-
+    analytics.page(Event.OPHRS_SCHEDULE_LIST);
     return () => {
       if (publishState == 1) {
         Notifications.showNotification(NotificationIds.PUBLISH_ABORTED);
@@ -79,6 +80,7 @@ const ScheduleView = ({}) => {
   };
 
   const publish = async () => {
+    analytics.track(Event.OPHRS_PUBLISH_SCHEDULE);
     setPublishState(1);
     const publishResult = await publishSchedules();
     setPublishState(publishResult);

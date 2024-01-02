@@ -15,6 +15,7 @@ import { Badge, Flex, Toaster, useToaster } from '@twilio-paste/core';
 import { StatusBadge } from '@twilio-paste/status';
 import AlertBox from '../common/AlertBox';
 import { updateRuleData, referencedSchedules } from '../../utils/schedule-manager';
+import { analytics, Event } from '../../utils/Analytics';
 
 interface OwnProps {
   isLoading: boolean;
@@ -31,6 +32,9 @@ const RuleDataTable = (props: OwnProps) => {
   const [deleteRule, setDeleteRule] = useState(null as Rule | null);
   const [copyRule, setCopyRule] = useState(false);
 
+  useEffect(() => {
+    analytics.page(Event.OPHRS_RULE_LIST);
+  });
 
   useEffect(() => {
     if (selectedRule !== null) {
@@ -39,6 +43,7 @@ const RuleDataTable = (props: OwnProps) => {
   }, [selectedRule]);
 
   const createRuleClick = () => {
+    analytics.track(Event.OPHRS_CREATE_RULE);
     setSelectedRule(null);
     setShowPanel(true);
   };
@@ -50,13 +55,20 @@ const RuleDataTable = (props: OwnProps) => {
 
   const onEditOrClone = (item: Rule, type: string) => {
     if (type == 'copy') {
+      analytics.track(Event.OPHRS_DUPLICATE_RULE, {
+        ruleName: item,
+      });
       setCopyRule(true);
+    }
+    if (type == 'edit') {
+      analytics.track(Event.OPHRS_EDIT_RULE, {
+        ruleName: item,
+      });
     }
     setSelectedRule(item);
   };
 
   const onUpdateRule = (newRules: Rule[]) => {
-
     props.updateRules(newRules);
     document.querySelector('#rule-data-table-root')?.scrollIntoView({ behavior: 'smooth' });
     setShowPanel(false);
@@ -231,7 +243,12 @@ const RuleDataTable = (props: OwnProps) => {
                   deleteDisabled={false}
                   editDisabled={false}
                   copyDisabled={false}
-                  onDelete={() => setDeleteRule(item)}
+                  onDelete={() => {
+                    analytics.track(Event.DELETE_RULE, {
+                      ruleName: item,
+                    });
+                    setDeleteRule(item);
+                  }}
                   onEdit={() => onEditOrClone(item, 'edit')}
                 />
               )}
@@ -245,7 +262,12 @@ const RuleDataTable = (props: OwnProps) => {
         showPanel={showPanel}
         copy={copyRule}
         schedules={props.schedules}
-        onDelete={() => setDeleteRule(selectedRule)}
+        onDelete={() => {
+          analytics.track(Event.DELETE_RULE, {
+            ruleName: selectedRule,
+          });
+          setDeleteRule(selectedRule);
+        }}
         selectedRule={selectedRule}
         onUpdateRule={onUpdateRule}
       />

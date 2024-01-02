@@ -22,6 +22,7 @@ import EditorPanel from '../common/EditorPanel';
 import { SortableList } from '../common/Sortable/SortableList';
 import { RuleDragHandle } from './RuleDragHandle';
 import { RulesContainer } from '../ScheduleView/ScheduleViewStyles';
+import { analytics, Event } from '../../utils/Analytics';
 
 interface OwnProps {
   onPanelClosed: () => void;
@@ -152,6 +153,10 @@ const ScheduleEditor = (props: OwnProps) => {
       setError(ScheduleManagerStrings[StringTemplates.ERROR_TIMEZONE_REQUIRED]);
       return;
     }
+
+    analytics.track(Event.OPHRS_SAVE_SCHEDULE, {
+      scheduleName: name,
+    });
 
     const newSchedule = { name, manualClose, timeZone, rules: rules.map((rule) => rule.id) };
 
