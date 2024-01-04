@@ -9,26 +9,27 @@ import RuleEditor from '../RuleEditor/RuleEditor';
 import { Rule, Schedule } from '../../types/schedule-manager';
 import ScheduleManagerStrings, { StringTemplates } from '../../flex-hooks/strings/ScheduleManager';
 import RRuleLanguage from '../../utils/RRuleLanguage';
+import { ProcessSuccessIcon } from '@twilio-paste/icons/cjs/ProcessSuccessIcon';
+import { ProcessWarningIcon } from '@twilio-paste/icons/cjs/ProcessWarningIcon';
 import { TableContainer } from '../ScheduleView/ScheduleViewStyles';
 import SchedulesAction from '../common/SchedulesAction';
-import { Badge, Flex, Toaster, useToaster } from '@twilio-paste/core';
-import { StatusBadge } from '@twilio-paste/status';
+import { Badge, Flex, UseToasterReturnedProps } from '@twilio-paste/core';
 import AlertBox from '../common/AlertBox';
 import { updateRuleData, referencedSchedules } from '../../utils/schedule-manager';
 import { analytics, Event } from '../../utils/Analytics';
+import StatusBadge from '../common/StatusBadge';
 
 interface OwnProps {
   isLoading: boolean;
   rules: Rule[];
   schedules: Schedule[];
   updateRules: (rules: Rule[]) => void;
+  toaster: UseToasterReturnedProps;
 }
 
 const RuleDataTable = (props: OwnProps) => {
-  const toaster = useToaster();
   const [showPanel, setShowPanel] = useState(false);
   const [selectedRule, setSelectedRule] = useState(null as Rule | null);
-  // const [openIndexNext, setOpenIndexNext] = useState(null as number | null);
   const [deleteRule, setDeleteRule] = useState(null as Rule | null);
   const [copyRule, setCopyRule] = useState(false);
 
@@ -74,7 +75,6 @@ const RuleDataTable = (props: OwnProps) => {
     setShowPanel(false);
     setSelectedRule(null);
     setCopyRule(false);
-
   };
 
   const getRuleRecurrence = (rule: Rule): string => {
@@ -115,14 +115,14 @@ const RuleDataTable = (props: OwnProps) => {
       }
 
       return (
-        <Badge as="span" variant="success">
+        <Badge as="span" variant={rule.isDeleted ? 'decorative10' : 'success'}>
           {`Open ${timeStr}`}
         </Badge>
       );
     } else {
       timeStr = ScheduleManagerStrings[StringTemplates.CLOSEDALLDAY];
       return (
-        <Badge as="span" variant="warning">
+        <Badge as="span" variant={rule.isDeleted ? 'decorative10' : 'warning'}>
           {timeStr}
         </Badge>
       );
@@ -132,14 +132,20 @@ const RuleDataTable = (props: OwnProps) => {
   const getPublishedStatus = (newRule: Rule) => {
     if (newRule.isPublished === false || newRule.isDeleted === true) {
       return (
-        <StatusBadge as="span" variant="ProcessWarning">
-          Not published
+        <StatusBadge>
+          <ProcessWarningIcon color="colorTextWarningStrong" decorative={false} size="sizeIcon10" title="warning" />
+          <Box as="p" color="colorTextWarningStrong" marginLeft="space20">
+            {ScheduleManagerStrings[StringTemplates.NOTPUBLISHED]}
+          </Box>
         </StatusBadge>
       );
     } else {
       return (
-        <StatusBadge as="span" variant="ProcessSuccess">
-          Published
+        <StatusBadge>
+          <ProcessSuccessIcon color="colorTextIconSuccess" decorative={false} size="sizeIcon10" title="success" />
+          <Box as="p" color={'colorTextIconSuccess'} marginLeft="space20">
+            {ScheduleManagerStrings[StringTemplates.PUBLISHED]}
+          </Box>
         </StatusBadge>
       );
     }
@@ -184,18 +190,31 @@ const RuleDataTable = (props: OwnProps) => {
 
     const refSchedules = referencedSchedules(props.schedules, deleteRule as Rule);
     if (refSchedules.length > 0) {
-      toaster.push({
+      props.toaster.push({
         message: ScheduleManagerStrings[StringTemplates.ERROR_RULE_REFERENCED] + ' ' + refSchedules.join(', '),
         variant: 'error',
-        dismissAfter: 4000,
+        dismissAfter: 1000,
       });
       return;
     }
     deleteRule.isDeleted = true;
-    const newScheduleData = updateRuleData(null, deleteRule);
-    onUpdateRule([...newScheduleData]);
+    const newRuleData = updateRuleData(null, deleteRule);
+    onUpdateRule([...newRuleData]);
     setDeleteRule(null);
     setSelectedRule(null);
+    props.toaster.push({
+      message: (
+        <Box as="p">
+          Deleted rule
+          <Box as="strong" fontWeight={'fontWeightSemibold'} marginRight={'space20'} marginLeft={'space20'}>
+            {deleteRule.name}.
+          </Box>
+          {ScheduleManagerStrings[StringTemplates.DONT_FORGET_TO_PUBLISH]}
+        </Box>
+      ),
+      variant: 'success',
+      dismissAfter: 1000,
+    });
   };
 
   return (
@@ -208,18 +227,17 @@ const RuleDataTable = (props: OwnProps) => {
           </Button>
         </Box>
         <TableContainer>
-          <DataTable
-            items={props.rules}
-            isLoading={props.isLoading}
-            // onRowClick={onRowClick}
-            defaultSortColumn="name-column"
-          >
+          <DataTable items={props.rules} isLoading={props.isLoading} defaultSortColumn="name-column">
             <ColumnDefinition
               key="name-column"
               header={ScheduleManagerStrings[StringTemplates.NAME]}
               sortDirection="asc"
               sortingFn={(a: Rule, b: Rule) => (a.name > b.name ? 1 : -1)}
-              content={(item: Rule) => <span id={item.name}>{item.name}</span>}
+              content={(item: Rule) => (
+                <span id={item.name} className={item.isDeleted ? 'disabled' : ''}>
+                  {item.name}
+                </span>
+              )}
             />
             <ColumnDefinition
               key="time-column"
@@ -231,17 +249,20 @@ const RuleDataTable = (props: OwnProps) => {
               key="date-column"
               header={ScheduleManagerStrings[StringTemplates.DATE]}
               sortingFn={(a: Rule, b: Rule) => (getRuleDate(a) > getRuleDate(b) ? 1 : -1)}
-              content={(item: Rule) => <span>{getRuleDate(item)}</span>}
+              content={(item: Rule) => <span className={item.isDeleted ? 'disabled' : ''}>{getRuleDate(item)}</span>}
             />
             <ColumnDefinition
               key="recurrence-column"
               header={ScheduleManagerStrings[StringTemplates.DATE]}
               sortingFn={(a: Rule, b: Rule) => (getRuleRecurrence(a) > getRuleRecurrence(b) ? 1 : -1)}
-              content={(item: Rule) => <span>{getRuleRecurrence(item)}</span>}
+              content={(item: Rule) => (
+                <span className={item.isDeleted ? 'disabled' : ''}>{getRuleRecurrence(item)}</span>
+              )}
             />
             <ColumnDefinition
               key="publish-status-column"
               header={ScheduleManagerStrings[StringTemplates.COLUMN_PUBLISHSTATUS]}
+              sortingFn={(a: Rule) => (a.isPublished ? 1 : -1)}
               content={(item: Rule) => getPublishedStatus(item)}
             />
             <ColumnDefinition
@@ -252,9 +273,9 @@ const RuleDataTable = (props: OwnProps) => {
                   onCopy={() => {
                     onEditOrClone(item, 'copy');
                   }}
-                  deleteDisabled={false}
-                  editDisabled={false}
-                  copyDisabled={false}
+                  deleteDisabled={item.isDeleted}
+                  editDisabled={item.isDeleted}
+                  copyDisabled={item.isDeleted}
                   onDelete={() => {
                     analytics.track(Event.DELETE_RULE, {
                       ruleName: item,
@@ -268,7 +289,6 @@ const RuleDataTable = (props: OwnProps) => {
           </DataTable>
         </TableContainer>
       </div>
-      <Toaster {...toaster} />
       <RuleEditor
         onPanelClosed={onPanelClosed}
         showPanel={showPanel}

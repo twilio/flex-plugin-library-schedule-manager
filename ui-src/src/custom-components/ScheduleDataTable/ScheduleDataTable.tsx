@@ -8,12 +8,22 @@ import ScheduleEditor from '../ScheduleEditor/ScheduleEditor';
 import { Rule, Schedule } from '../../types/schedule-manager';
 import ScheduleManagerStrings, { StringTemplates } from '../../flex-hooks/strings/ScheduleManager';
 import { TableContainer } from '../ScheduleView/ScheduleViewStyles';
-import { Badge, Flex, Heading, Popover, PopoverButton, PopoverContainer, Separator, Tooltip } from '@twilio-paste/core';
-import { StatusBadge } from '@twilio-paste/status';
+import {
+  Badge,
+  Flex,
+  Popover,
+  PopoverButton,
+  PopoverContainer,
+  Tooltip,
+  UseToasterReturnedProps,
+} from '@twilio-paste/core';
+import StatusBadge from '../common/StatusBadge';
 import SchedulesAction from '../common/SchedulesAction';
 import AlertBox from '../common/AlertBox';
 import { updateScheduleData } from '../../utils/schedule-manager';
-import { analytics, Event} from '../../utils/Analytics';
+import { analytics, Event } from '../../utils/Analytics';
+import { ProcessSuccessIcon } from '@twilio-paste/icons/cjs/ProcessSuccessIcon';
+import { ProcessWarningIcon } from '@twilio-paste/icons/cjs/ProcessWarningIcon';
 
 interface OwnProps {
   isLoading: boolean;
@@ -21,6 +31,7 @@ interface OwnProps {
   schedules: Schedule[];
   updateSchedules: (schedules: Schedule[]) => void;
   updated: Date;
+  toaster: UseToasterReturnedProps;
 }
 
 const ScheduleDataTable = (props: OwnProps) => {
@@ -29,7 +40,6 @@ const ScheduleDataTable = (props: OwnProps) => {
   const [showPanel, setShowPanel] = useState(false);
   const [selectedSchedule, setSelectedSchedule] = useState(null as Schedule | null);
   const [statusTimestamp, setStatusTimestamp] = useState('');
-  // const [openIndexNext, setOpenIndexNext] = useState(null as number | null);
   const [deleteSchedule, setDeleteSchedule] = useState(null as Schedule | null);
   const [copySchedule, setCopySchedule] = useState(false);
 
@@ -54,21 +64,23 @@ const ScheduleDataTable = (props: OwnProps) => {
     setSelectedSchedule(null);
   };
 
-  const onRowClick = (item: Schedule) => {
-    setSelectedSchedule(item);
-  };
-
   const getPublishedStatus = (newSchedule: Schedule) => {
     if (newSchedule.isPublished === false || newSchedule.isDeleted === true) {
       return (
-        <StatusBadge as="span" variant="ProcessWarning">
-          Not published
+        <StatusBadge>
+          <ProcessWarningIcon color="colorTextWarningStrong" decorative={false} size="sizeIcon10" title="warning" />
+          <Box as="p" color="colorTextWarningStrong" marginLeft="space20">
+            {ScheduleManagerStrings[StringTemplates.NOTPUBLISHED]}
+          </Box>
         </StatusBadge>
       );
     } else {
       return (
-        <StatusBadge as="span" variant="ProcessSuccess">
-          Published
+        <StatusBadge>
+          <ProcessSuccessIcon color="colorTextIconSuccess" decorative={false} size="sizeIcon10" title="success" />
+          <Box as="p" color="colorTextIconSuccess" marginLeft="space20">
+            {ScheduleManagerStrings[StringTemplates.PUBLISHED]}
+          </Box>
         </StatusBadge>
       );
     }
@@ -85,7 +97,7 @@ const ScheduleDataTable = (props: OwnProps) => {
 
   const onEditOrClone = (item: Schedule, type: string) => {
     if (type == 'copy') {
-      analytics.track(Event.OPHRS_DUPLICATE_SCHEDULE,{
+      analytics.track(Event.OPHRS_DUPLICATE_SCHEDULE, {
         scheduleName: item,
       });
       setCopySchedule(true);
@@ -105,7 +117,7 @@ const ScheduleDataTable = (props: OwnProps) => {
       if (schedule.manualClose) {
         return (
           <Tooltip text={closedReason}>
-            <Badge as="span" variant="warning">
+            <Badge as="span" variant={schedule.isDeleted ? 'decorative10' : 'warning'}>
               {ScheduleManagerStrings[StringTemplates.MANUALLYCLOSE]}
             </Badge>
           </Tooltip>
@@ -113,7 +125,7 @@ const ScheduleDataTable = (props: OwnProps) => {
       }
       if (isOpen) {
         return (
-          <Badge as="span" variant="success">
+          <Badge as="span" variant={schedule.isDeleted ? 'decorative10' : 'success'}>
             {ScheduleManagerStrings[StringTemplates.OPEN]}
           </Badge>
         );
@@ -121,13 +133,13 @@ const ScheduleDataTable = (props: OwnProps) => {
 
       if (closedReason.toLowerCase() === 'closed') {
         return (
-          <Badge as="span" variant="warning">
+          <Badge as="span" variant={schedule.isDeleted ? 'decorative10' : 'warning'}>
             {ScheduleManagerStrings[StringTemplates.CLOSED]}
           </Badge>
         );
       } else {
         return (
-          <Badge as="span" variant="warning">
+          <Badge as="span" variant={schedule.isDeleted ? 'decorative10' : 'warning'}>
             {`${ScheduleManagerStrings[StringTemplates.CLOSED]} (${closedReason})`}
           </Badge>
         );
@@ -157,6 +169,19 @@ const ScheduleDataTable = (props: OwnProps) => {
     deleteSchedule.isDeleted = true;
     const newScheduleData = updateScheduleData(null, deleteSchedule);
     onUpdateSchedule([...newScheduleData]);
+    props.toaster.push({
+      message: (
+        <Box as="p">
+          Deleted schedule
+          <Box as="strong" fontWeight={'fontWeightSemibold'} marginRight={'space20'} marginLeft={'space20'}>
+            {deleteSchedule.name}.
+          </Box>
+          {ScheduleManagerStrings[StringTemplates.DONT_FORGET_TO_PUBLISH]}
+        </Box>
+      ),
+      variant: 'success',
+      dismissAfter: 1000,
+    });
     setDeleteSchedule(null);
     setSelectedSchedule(null);
   };
@@ -177,7 +202,7 @@ const ScheduleDataTable = (props: OwnProps) => {
               header={ScheduleManagerStrings[StringTemplates.NAME]}
               sortDirection="asc"
               sortingFn={(a: Schedule, b: Schedule) => (a.name > b.name ? 1 : -1)}
-              content={(item: Schedule) => <span>{item.name}</span>}
+              content={(item: Schedule) => <span className={item.isDeleted ? 'disabled' : ''}>{item.name}</span>}
             />
             <ColumnDefinition
               key="status-column"
@@ -207,31 +232,26 @@ const ScheduleDataTable = (props: OwnProps) => {
                         <Box as="h3" fontWeight={'fontWeightSemibold'} fontSize={'fontSize50'} marginBottom={'space30'}>
                           {ScheduleManagerStrings[StringTemplates.RULES_DETAILS_TITLE]}
                         </Box>
-                        <Box as="span">{ruleStr}</Box>
+                        <Box as="span" className={item.isDeleted ? 'disabled' : ''}>
+                          {ruleStr}
+                        </Box>
                       </Popover>
                     </PopoverContainer>
                   );
                 }
 
-                return <span>{trimmed}</span>;
+                return <span className={item.isDeleted ? 'disabled' : ''}>{trimmed}</span>;
               }}
             />
             <ColumnDefinition
               key="timezone-column"
               header={ScheduleManagerStrings[StringTemplates.TIMEZONE]}
               sortingFn={(a: Schedule, b: Schedule) => (a.timeZone > b.timeZone ? 1 : -1)}
-              content={(item: Schedule) => <span>{item.timeZone}</span>}
+              content={(item: Schedule) => <span className={item.isDeleted ? 'disabled' : ''}>{item.timeZone}</span>}
             />
             <ColumnDefinition
               key="publish-status-column"
               header={ScheduleManagerStrings[StringTemplates.COLUMN_PUBLISHSTATUS]}
-              // content={(item: Schedule) => {
-              //   return (
-              //     <StatusBadge as="span" variant="ProcessSuccess">
-              //       Published
-              //     </StatusBadge>
-              //   );
-              // }}
               content={(item: Schedule) => getPublishedStatus(item)}
             />
             <ColumnDefinition
@@ -242,9 +262,9 @@ const ScheduleDataTable = (props: OwnProps) => {
                   onCopy={() => {
                     onEditOrClone(item, 'copy');
                   }}
-                  deleteDisabled={false}
-                  editDisabled={false}
-                  copyDisabled={false}
+                  deleteDisabled={item.isDeleted}
+                  editDisabled={item.isDeleted}
+                  copyDisabled={item.isDeleted}
                   onDelete={() => {
                     analytics.track(Event.OPHRS_DELETE_SCHEDULE, {
                       scheduleName: item,

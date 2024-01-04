@@ -102,6 +102,8 @@ export enum StringTemplates {
   MONTH_DEC = 'SchMgrMonthDec',
   RESTRICT_DATE_RANGE = 'SchMgrRestrictDateRange',
   START_DATE = 'SchMgrStartDate',
+  PUBLISHED = 'SchMgrPublished',
+  NOTPUBLISHED = 'SchMgrNotPublished',
   END_DATE = 'SchMgrEndDate',
   ONE_TIME = 'SchMgrOneTime',
   DELETE_CONFIRM_SCHEDULE = 'SchMgrDeleteConfirmSchedule',
@@ -117,6 +119,8 @@ export enum StringTemplates {
   CANCEL_PUBLISHING_TEXT2 = 'SchMgrCancelPublishingText2',
   CANCEL_PUBLISHING_TEXT3 = 'SchMgrCancelPublishingText3',
   CANCEL_PUBLISHING_TEXT4 = 'SchMgrCancelPublishingText4',
+  DONT_FORGET_TO_PUBLISH = 'SchMgrDontForgetToPublish',
+  SUCCESFULLY_PUBLISHED_CHANGES = 'SchMgrSuccesfullyPublishedChanges',
 }
 
 export default {
@@ -240,5 +244,10 @@ export default {
   [StringTemplates.CANCEL_PUBLISHING_TEXT]: 'Cancel Publishing?',
   [StringTemplates.CANCEL_PUBLISHING_TEXT2]: 'Are you sure you want to cancel? You have',
   [StringTemplates.CANCEL_PUBLISHING_TEXT3]: 'unpublished changes',
-  [StringTemplates.CANCEL_PUBLISHING_TEXT4]: 'that will be lost, you need to Publish the changes to complete the process.',
+  [StringTemplates.CANCEL_PUBLISHING_TEXT4]:
+    'that will be lost, you need to Publish the changes to complete the process.',
+  [StringTemplates.PUBLISHED]: 'Published',
+  [StringTemplates.NOTPUBLISHED]: 'Not Published',
+  [StringTemplates.DONT_FORGET_TO_PUBLISH]: "Don't forget to publish your changes",
+  [StringTemplates.SUCCESFULLY_PUBLISHED_CHANGES]: 'You successfully published all the changes.',
 };

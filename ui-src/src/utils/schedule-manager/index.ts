@@ -4,6 +4,7 @@ import ScheduleManagerService from '../serverless/ScheduleManager/ScheduleManage
 import { Rule, Schedule, ScheduleManagerConfig } from '../../types/schedule-manager';
 import { ErrorManager, FlexPluginErrorType } from '../../ErrorManager';
 import { RRule } from 'rrule';
+import { omit } from 'lodash';
 import { DateTime } from 'luxon';
 
 let config = {
@@ -48,7 +49,6 @@ export const referencedSchedules = (schedules: Schedule[], rule: Rule): string[]
 export const updateScheduleData = (newSchedule: Schedule | null, existingSchedule: Schedule | null): Schedule[] => {
   if (existingSchedule === null && newSchedule !== null) {
     // adding schedule
-    console.log('config.data.schedules', config.data.schedules);
     config.data.schedules = [...config.data.schedules, newSchedule];
   } else if (existingSchedule !== null && newSchedule === null) {
     // removing existing schedule
@@ -119,7 +119,7 @@ export const isRuleUnique = (newRule: Rule, existingRule: Rule | null): boolean 
 export const publishSchedules = async (): Promise<number> => {
   // return values: 0=success, 2=version error, 3=failure, 4=in available activity
   if (Manager.getInstance().store.getState().flex.worker.activity.available === true) {
-    Notifications.showNotification(NotificationIds.PUBLISH_FAILED_ACTIVITY);
+    // Notifications.showNotification(NotificationIds.PUBLISH_FAILED_ACTIVITY);
     return 4;
   }
 
@@ -131,15 +131,15 @@ export const publishSchedules = async (): Promise<number> => {
     version: config.version,
     versionIsDeployed: config.versionIsDeployed,
   };
-  latestData.data.rules.map((rule) => {
-    rule.isPublished && delete rule.isPublished;
-    rule.isDeleted && delete rule.isDeleted;
-  });
-  latestData.data.schedules.map((schedule) => {
-    schedule.isPublished && delete schedule.isPublished;
-    schedule.isDeleted && delete schedule.isDeleted;
-  });
+  const backendRulesData = latestData.data.rules.map((rule) => omit(rule, ['isPublished', 'isDeleted']));
+  const backendSchedulesData = latestData.data.schedules.map((schedule) =>
+    omit(schedule, ['isPublished', 'isDeleted']),
+  );
 
+  latestData.data = {
+    rules: backendRulesData,
+    schedules: backendSchedulesData,
+  };
   const updateResponse = await ScheduleManagerService.update(latestData);
 
   if (!updateResponse.success) {
@@ -150,11 +150,11 @@ export const publishSchedules = async (): Promise<number> => {
     });
 
     if (updateResponse.buildSid == 'versionError') {
-      Notifications.showNotification(NotificationIds.PUBLISH_FAILED_OTHER_UPDATE);
+      // Notifications.showNotification(NotificationIds.PUBLISH_FAILED_OTHER_UPDATE);
       return 2;
     }
 
-    Notifications.showNotification(NotificationIds.PUBLISH_FAILED);
+    // Notifications.showNotification(NotificationIds.PUBLISH_FAILED);
     return 3;
   }
 
@@ -170,7 +170,7 @@ export const publishSchedules = async (): Promise<number> => {
         type: FlexPluginErrorType.action,
         context: 'Plugin.ScheduleManager.publishSchedules',
       });
-      Notifications.showNotification(NotificationIds.PUBLISH_FAILED);
+      // Notifications.showNotification(NotificationIds.PUBLISH_FAILED);
       return 3;
     }
 
@@ -186,11 +186,11 @@ export const publishSchedules = async (): Promise<number> => {
       type: FlexPluginErrorType.action,
       context: 'Plugin.ScheduleManager.publishSchedules',
     });
-    Notifications.showNotification(NotificationIds.PUBLISH_FAILED);
+    // Notifications.showNotification(NotificationIds.PUBLISH_FAILED);
     return 3;
   }
 
-  Notifications.showNotification(NotificationIds.PUBLISH_SUCCESS);
+  // Notifications.showNotification(NotificationIds.PUBLISH_SUCCESS);
   return 0;
 };
 

@@ -2,15 +2,14 @@ import { Box, Button, Stack, Tooltip } from '@twilio-paste/core';
 import { EditIcon } from '@twilio-paste/icons/cjs/EditIcon';
 import { DeleteIcon } from '@twilio-paste/icons/cjs/DeleteIcon';
 import { CopyIcon } from '@twilio-paste/icons/cjs/CopyIcon';
-import React, { MouseEventHandler } from 'react';
-import { Rule, Schedule } from '../../types/schedule-manager';
+import React from 'react';
 
 interface SchedulesAction {
   onCopy: () => void;
   onEdit: () => void;
-  deleteDisabled: boolean;
-  editDisabled: boolean;
-  copyDisabled: boolean;
+  deleteDisabled: boolean | undefined;
+  editDisabled: boolean | undefined;
+  copyDisabled: boolean | undefined;
   onDelete: () => void;
 }
 
@@ -27,7 +26,12 @@ const SchedulesAction: React.FC<SchedulesAction> = (props) => {
             onCopy();
           }}
         >
-          <CopyIcon decorative={true} size={'sizeIcon20'} title="Copy" color={'colorTextLink'} />
+          <CopyIcon
+            decorative={true}
+            size={'sizeIcon20'}
+            title="Copy"
+            color={copyDisabled ? 'colorTextDecorative10' : 'colorTextLink'}
+          />
         </Button>
         <Button
           variant="link"
@@ -37,7 +41,12 @@ const SchedulesAction: React.FC<SchedulesAction> = (props) => {
             onEdit();
           }}
         >
-          <EditIcon decorative={true} size={'sizeIcon20'} title="Edit" color={'colorTextLink'} />
+          <EditIcon
+            decorative={true}
+            size={'sizeIcon20'}
+            title="Edit"
+            color={editDisabled ? 'colorTextDecorative10' : 'colorTextLink'}
+          />
         </Button>
         <Button
           variant="link"
@@ -47,7 +56,12 @@ const SchedulesAction: React.FC<SchedulesAction> = (props) => {
             onDelete();
           }}
         >
-          <DeleteIcon decorative={true} size={'sizeIcon20'} title="Delete" color={'colorTextError'} />
+          <DeleteIcon
+            decorative={true}
+            size={'sizeIcon20'}
+            title="Delete"
+            color={deleteDisabled ? 'colorTextDecorative10' : 'colorTextError'}
+          />
         </Button>
       </Stack>
     </Box>

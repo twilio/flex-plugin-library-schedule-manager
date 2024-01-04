@@ -23,15 +23,15 @@ import { Rule, Schedule } from '../../types/schedule-manager';
 import { loadScheduleData, publishSchedules } from '../../utils/schedule-manager';
 import { NotificationIds } from '../../flex-hooks/notifications/ScheduleManager';
 import ScheduleManagerStrings, { StringTemplates } from '../../flex-hooks/strings/ScheduleManager';
-import { Box, Callout, CalloutHeading, CalloutText } from '@twilio-paste/core';
+import { Box, Callout, CalloutHeading, CalloutText, Toaster, useToaster } from '@twilio-paste/core';
 
 const ScheduleView = ({}) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isChangesPresent, setChangesPresent] = useState(false);
+  const toaster = useToaster();
   const [rules, setRules] = useState([] as Rule[]);
   const [schedules, setSchedules] = useState([] as Schedule[]);
   const [updated, setUpdated] = useState(new Date());
-  const [showPanel, setShowPanel] = useState(false);
   const [isVersionMismatch, setIsVersionMismatch] = useState(false);
   const [selectedTabName, setSelectedTabName] = React.useState<string>('schedules');
   const [loadFailed, setLoadFailed] = useState(false);
@@ -68,33 +68,19 @@ const ScheduleView = ({}) => {
   };
 
   useEffect(() => {
-    listSchedules();
-
-    return () => {
-      if (publishState == 1) {
-        Notifications.showNotification(NotificationIds.PUBLISH_ABORTED);
-      }
-    };
-  }, []);
-
-  useEffect(() => {
     const unpublishedSchedules = schedules.filter(
       (schedule) => schedule.isPublished === false || schedule.isDeleted === true,
     );
-    console.log(unpublishedSchedules);
     const unpublishedRules = rules.filter((rule) => rule.isPublished === false || rule.isDeleted === true);
-    console.log(unpublishedSchedules);
     setChangesPresent(unpublishedSchedules.length > 0 || unpublishedRules.length > 0);
   }, [schedules, rules]);
 
   const updateSchedules = (newSchedules: Schedule[]) => {
     setSchedules(newSchedules);
-    // setIsDirty(true);
   };
 
   const updateRules = (newRules: Rule[]) => {
     setRules(newRules);
-    // setIsDirty(true);
   };
 
   const publish = async () => {
@@ -103,9 +89,40 @@ const ScheduleView = ({}) => {
     const publishResult = await publishSchedules();
     setPublishState(publishResult);
 
-    if (publishResult == 0) {
-      setIsDirty(false);
-      await listSchedules();
+    switch (publishResult) {
+      case 0:
+        setIsDirty(false);
+        toaster.push({
+          message: <Box as="p">{ScheduleManagerStrings[StringTemplates.SUCCESFULLY_PUBLISHED_CHANGES]}</Box>,
+          variant: 'success',
+          dismissAfter: 4000,
+        });
+        await listSchedules();
+        break;
+      case 2:
+        toaster.push({
+          message: <Box as="p">{ScheduleManagerStrings[StringTemplates.PUBLISH_FAILED_OTHER_UPDATE]}</Box>,
+          variant: 'error',
+          dismissAfter: 4000,
+        });
+        break;
+      case 3:
+        toaster.push({
+          message: <Box as="p">{ScheduleManagerStrings[StringTemplates.PUBLISH_FAILED]}</Box>,
+          variant: 'error',
+          dismissAfter: 4000,
+        });
+        break;
+      case 4:
+        toaster.push({
+          message: <Box as="p">{ScheduleManagerStrings[StringTemplates.PUBLISH_FAILED_ACTIVITY]}</Box>,
+          variant: 'error',
+          dismissAfter: 4000,
+        });
+        break;
+
+      default:
+        break;
     }
   };
 
@@ -120,30 +137,8 @@ const ScheduleView = ({}) => {
         <Heading as="h3" variant="heading30" marginBottom="space0" data-testid="schedule-manager-title">
           {ScheduleManagerStrings[StringTemplates.SCHEDULE_MANAGER_TITLE]}
         </Heading>
-
-        {/* <Box variant="warning" display={'flex'} >
-          <WarningIcon decorative={false} title="Description of icon" size={}/>
-          <Box>
-            <strong>Unpublished changes</strong>
-            <p>
-              You have 1 unpublished change. Your changes will be lost. please click <strong>Publish changes</strong> to
-              complete process
-            </p>
-          </Box>
-        </Box> */}
-        {/* <AlertContainer>
-          <Alert variant="warning">
-            <Text as="strong" marginLeft={'space20'}>
-              Unpublished changes
-            </Text>
-            <Text as="p" marginTop={'space30'} marginLeft={'space20'}>
-              You have 1 unpublished change. Your changes will be lost. please click <strong>Publish changes</strong> to
-              complete process
-            </Text>
-          </Alert>
-        </AlertContainer> */}
         {isChangesPresent && (
-          <Callout variant="warning">
+          <Callout variant="warning" marginY={'space40'}>
             <CalloutHeading as="h2">{ScheduleManagerStrings[StringTemplates.UNPUBLISHED_CHANGES]}</CalloutHeading>
             <CalloutText>
               {ScheduleManagerStrings[StringTemplates.UNPUBLISHED_CHANGES_TEXT]}
@@ -165,10 +160,17 @@ const ScheduleView = ({}) => {
             schedules={schedules}
             updateSchedules={updateSchedules}
             updated={updated}
+            toaster={toaster}
           />
         </Tab>
         <Tab label={ScheduleManagerStrings[StringTemplates.TAB_RULES]} key="rules" uniqueName="rules">
-          <RuleDataTable isLoading={isLoading} rules={rules} schedules={schedules} updateRules={updateRules} />
+          <RuleDataTable
+            isLoading={isLoading}
+            rules={rules}
+            schedules={schedules}
+            updateRules={updateRules}
+            toaster={toaster}
+          />
         </Tab>
       </Tabs>
       <PublishActionContainer>
@@ -226,6 +228,7 @@ const ScheduleView = ({}) => {
           </Box>
         </Box>
       </AlertBox>
+      <Toaster {...toaster} />
     </ScheduleViewWrapper>
   );
 };

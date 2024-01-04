@@ -57,8 +57,14 @@ export const TableContainer = styled('div')`
   margin: 0 1em;
   box-sizing: border-box;
 
+  table {
+    border: 1px solid #e1e3ea;
+  }
   td:nth-of-type(3),
   th:nth-of-type(3) {
     width: 30%;
+  }
+  td .disabled {
+    color: #e1e3ea;
   }
 `;
