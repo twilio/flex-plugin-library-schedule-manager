@@ -21,6 +21,7 @@ const SchedulesAction: React.FC<SchedulesAction> = (props) => {
         <Button
           variant="link"
           size="small"
+          aria-label="Copy"
           disabled={copyDisabled}
           onClick={() => {
             onCopy();
@@ -36,6 +37,7 @@ const SchedulesAction: React.FC<SchedulesAction> = (props) => {
         <Button
           variant="link"
           size="small"
+          aria-label="Edit"
           disabled={editDisabled}
           onClick={() => {
             onEdit();
@@ -51,6 +53,7 @@ const SchedulesAction: React.FC<SchedulesAction> = (props) => {
         <Button
           variant="link"
           size="small"
+          aria-label="Delete"
           disabled={deleteDisabled}
           onClick={() => {
             onDelete();

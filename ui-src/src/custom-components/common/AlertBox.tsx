@@ -21,18 +21,18 @@ const AlertBox: React.FC<AlertBoxProps> = (props) => {
   const { isOpen, handleClose, handleSubmit, children, title } = props;
   return (
     <Modal ariaLabelledby={title} isOpen={isOpen} onDismiss={handleClose} size="default">
-      <ModalHeader id="alert-header">
+      <ModalHeader>
         <ModalHeading as="h3" id={title}>
           {title}
         </ModalHeading>
       </ModalHeader>
       <ModalBody>{children as NonNullable<React.ReactNode>}</ModalBody>
-      <ModalFooter id="alert-footer">
+      <ModalFooter>
         <ModalFooterActions>
-          <Button variant="secondary" onClick={handleClose}>
+          <Button variant="secondary" onClick={handleClose} aria-label="confirm cancel">
             {ScheduleManagerStrings[StringTemplates.CANCEL_BUTTON]}
           </Button>
-          <Button variant="destructive" onClick={handleSubmit}>
+          <Button variant="destructive" onClick={handleSubmit} aria-label="confirm delete">
             {ScheduleManagerStrings[StringTemplates.DELETE_BUTTON]}
           </Button>
         </ModalFooterActions>

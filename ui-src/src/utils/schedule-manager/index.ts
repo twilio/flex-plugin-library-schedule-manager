@@ -38,7 +38,7 @@ export const referencedSchedules = (schedules: Schedule[], rule: Rule): string[]
   const refSchedules = [] as string[];
   if (schedules) {
     schedules.forEach((schedule) => {
-      if (rule && schedule.rules.indexOf(rule.id) >= 0) {
+      if (rule && schedule.rules.indexOf(rule.id) >= 0 && !schedule.isDeleted) {
         refSchedules.push(schedule.name);
       }
     });
