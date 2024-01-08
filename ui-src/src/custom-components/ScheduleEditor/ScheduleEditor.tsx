@@ -169,7 +169,7 @@ const ScheduleEditor = (props: OwnProps) => {
       if (props.copy) {
         copySchedule(newSchedule);
       } else {
-        props.onUpdateSchedule(newScheduleData);
+        props.onUpdateSchedule([...newScheduleData]);
       }
     } else {
       setError(ScheduleManagerStrings[StringTemplates.ERROR_NAME_UNIQUE]);

@@ -459,7 +459,7 @@ const RuleEditor = (props: OwnProps) => {
       if (props.copy) {
         copyRule(newRule);
       } else {
-        props.onUpdateRule(newRuleData);
+        props.onUpdateRule([...newRuleData]);
       }
     } else {
       setError(ScheduleManagerStrings[StringTemplates.ERROR_NAME_UNIQUE]);

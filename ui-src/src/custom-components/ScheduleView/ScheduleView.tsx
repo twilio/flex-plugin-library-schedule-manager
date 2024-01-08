@@ -127,6 +127,7 @@ const ScheduleView = ({}) => {
   };
 
   const handleCancelConfirmSubmit = (): void => {
+    analytics.track(Event.OPHRS_RESET_SCHEDULE);
     listSchedules();
     setCancelSchedule(false);
   };
