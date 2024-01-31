@@ -9,6 +9,12 @@ jest.mock('@twilio-paste/core', () => {
     Toaster: () => <div data-testid="toaster"></div>,
   };
 });
+
+jest.mock('../../common/Sortable/SortableList', () => {
+  return {
+    SortableList: () => <div data-testid="sortable-list"></div>,
+  };
+});
 describe('ScheduleView component', () => {
   test('renders correct data loaded from serverless', async () => {
     const dataPromise: Promise<any> = new Promise((resolve) => {
