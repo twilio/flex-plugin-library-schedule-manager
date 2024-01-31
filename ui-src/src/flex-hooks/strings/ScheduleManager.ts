@@ -149,7 +149,7 @@ export default {
   [StringTemplates.CLOSEDALLDAY]: 'Closed all day',
   [StringTemplates.STATUS_PENDING]: 'Pending Publish',
   [StringTemplates.NAME]: 'Friendly Name',
-  [StringTemplates.SCHEDULE_NAME]: 'Schedule Name',
+  [StringTemplates.SCHEDULE_NAME]: 'Schedule name',
   [StringTemplates.RULE_NAME]: 'Rule Name',
   [StringTemplates.COLUMN_STATUS]: 'Open/closed status',
   [StringTemplates.COLUMN_STATUS_ASOF]: 'as of',
