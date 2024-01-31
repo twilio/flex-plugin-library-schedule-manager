@@ -11,10 +11,10 @@ export const ScheduleViewWrapper = styled('div')`
     width: 40vw;
     position: fixed;
     right: 0;
-    top: 52px;
+    top: 76px;
     background: white;
-    z-index: 2;
-    height: 95vh;
+    z-index: 1000;
+    height: 92vh;
   }
 `;
 
@@ -31,8 +31,6 @@ export const ScheduleViewHeader = styled('div')`
 
 export const RulesContainer = styled('div')`
   width: 100%;
-  overflow: auto;
-  max-height: 25vh;
 
   h4 {
     background-color: rgb(244, 244, 246);

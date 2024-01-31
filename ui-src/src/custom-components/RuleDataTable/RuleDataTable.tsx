@@ -230,7 +230,7 @@ const RuleDataTable = (props: OwnProps) => {
           <DataTable items={props.rules} isLoading={props.isLoading} defaultSortColumn="name-column">
             <ColumnDefinition
               key="name-column"
-              header={ScheduleManagerStrings[StringTemplates.NAME]}
+              header={ScheduleManagerStrings[StringTemplates.RULE_NAME]}
               sortDirection="asc"
               sortingFn={(a: Rule, b: Rule) => (a.name > b.name ? 1 : -1)}
               content={(item: Rule) => (

@@ -199,7 +199,7 @@ const ScheduleDataTable = (props: OwnProps) => {
           <DataTable items={props.schedules} isLoading={props.isLoading} defaultSortColumn="name-column">
             <ColumnDefinition
               key="name-column"
-              header={ScheduleManagerStrings[StringTemplates.NAME]}
+              header={ScheduleManagerStrings[StringTemplates.SCHEDULE_NAME]}
               sortDirection="asc"
               sortingFn={(a: Schedule, b: Schedule) => (a.name > b.name ? 1 : -1)}
               content={(item: Schedule) => <span className={item.isDeleted ? 'disabled' : ''}>{item.name}</span>}

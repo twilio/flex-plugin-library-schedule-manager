@@ -204,11 +204,11 @@ const ScheduleEditor = (props: OwnProps) => {
         </span>
       }
     >
-      <Box padding="space60">
+      <Box padding="space60" overflow={'auto'} height={'78vh'}>
         <Stack orientation="vertical" spacing="space80">
           <>
             <Label htmlFor="name" required>
-              {ScheduleManagerStrings[StringTemplates.NAME]}
+              {ScheduleManagerStrings[StringTemplates.SCHEDULE_NAME]}
             </Label>
             <Input
               id="name"

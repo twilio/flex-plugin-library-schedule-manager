@@ -21,7 +21,7 @@ const SchedulesAction: React.FC<SchedulesAction> = (props) => {
         <Button
           variant="link"
           size="small"
-          aria-label="Copy"
+          aria-label="Duplicate"
           disabled={copyDisabled}
           onClick={() => {
             onCopy();
@@ -30,7 +30,7 @@ const SchedulesAction: React.FC<SchedulesAction> = (props) => {
           <CopyIcon
             decorative={true}
             size={'sizeIcon20'}
-            title="Copy"
+            title="Duplicate"
             color={copyDisabled ? 'colorTextDecorative10' : 'colorTextLink'}
           />
         </Button>
