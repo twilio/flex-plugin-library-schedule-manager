@@ -2,9 +2,6 @@ import React from 'react';
 import { render, waitFor } from '@testing-library/react';
 import ScheduleEditor from '../ScheduleEditor';
 
-jest.mock('@dnd-kit/core');
-jest.mock('@dnd-kit/sortable');
-
 describe('ScheduleEditor component', () => {
   test('renders correctly', () => {
     const editor = render(
