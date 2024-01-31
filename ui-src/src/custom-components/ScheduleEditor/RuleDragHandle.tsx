@@ -1,9 +1,8 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Box, Checkbox, Flex } from '@twilio-paste/core';
+import { Box, Flex } from '@twilio-paste/core';
 import { Text } from '@twilio-paste/core/text';
 import { DeleteIcon } from '@twilio-paste/icons/cjs/DeleteIcon';
-import { ChevronRightIcon } from '@twilio-paste/icons/cjs/ChevronRightIcon';
 import { DragIcon } from '@twilio-paste/icons/cjs/DragIcon';
 import React from 'react';
 
