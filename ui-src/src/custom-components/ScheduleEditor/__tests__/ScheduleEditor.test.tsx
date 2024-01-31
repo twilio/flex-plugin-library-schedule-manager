@@ -1,9 +1,12 @@
 import React from 'react';
 import { render, waitFor } from '@testing-library/react';
 import ScheduleEditor from '../ScheduleEditor';
-import { SortableList } from '../../common/Sortable/SortableList';
 
-jest.mock('../../common/Sortable/SortableList');
+jest.mock('../../common/Sortable/SortableList', () => {
+  return {
+    SortableList: () => <div data-testid="sortable-list"></div>,
+  };
+});
 
 describe('ScheduleEditor component', () => {
   test('renders correctly', () => {
