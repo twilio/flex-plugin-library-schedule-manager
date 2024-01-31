@@ -14,6 +14,7 @@ describe('<ScheduleDataTable>', () => {
           schedules={[]}
           updateSchedules={(schedules: Schedule[]) => {}}
           updated={new Date()}
+          toaster={{ showToast: () => {}, hideToast: () => {} }}
         />,
       ).toJSON(),
     ).toMatchSnapshot();

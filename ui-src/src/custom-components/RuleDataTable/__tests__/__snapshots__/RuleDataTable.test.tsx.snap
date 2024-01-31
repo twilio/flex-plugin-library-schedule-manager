@@ -9,7 +9,7 @@ exports[`<RuleDataTable> should render component 1`] = `
         id="rule-data-table-root"
       >
         <div
-          class="css-sb3wa1"
+          class="css-cuork0"
           data-paste-element="BOX"
         >
           <button
@@ -44,10 +44,13 @@ exports[`<RuleDataTable> should render component 1`] = `
                   />
                 </svg>
               </span>
-              Create Rule
+              Create new rule
             </span>
           </button>
         </div>
+        <div
+          class="css-1fha43i"
+        />
       </div>
     </div>
   </body>,
@@ -56,7 +59,7 @@ exports[`<RuleDataTable> should render component 1`] = `
       id="rule-data-table-root"
     >
       <div
-        class="css-sb3wa1"
+        class="css-cuork0"
         data-paste-element="BOX"
       >
         <button
@@ -91,10 +94,13 @@ exports[`<RuleDataTable> should render component 1`] = `
                 />
               </svg>
             </span>
-            Create Rule
+            Create new rule
           </span>
         </button>
       </div>
+      <div
+        class="css-1fha43i"
+      />
     </div>
   </div>,
   "debug": [Function],

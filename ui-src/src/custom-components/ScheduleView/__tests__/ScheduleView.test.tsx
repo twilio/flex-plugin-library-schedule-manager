@@ -3,6 +3,13 @@ import { render, waitFor } from '@testing-library/react';
 import ScheduleView from '../ScheduleView';
 import * as utils from '../../../utils/schedule-manager';
 
+jest.mock('@twilio-paste/core', () => {
+  return {
+    ...jest.requireActual('@twilio-paste/core'),
+    Toaster: () => <div data-testid="toaster"></div>,
+  };
+});
+
 describe('ScheduleView component', () => {
   test('renders correct data loaded from serverless', async () => {
     const dataPromise: Promise<any> = new Promise((resolve) => {
@@ -40,7 +47,7 @@ describe('ScheduleView component', () => {
     const scheduleView = render(<ScheduleView />);
     await waitFor(() => {
       expect(scheduleView).toMatchSnapshot();
-      expect(scheduleView.getByTestId('schedule-manager-title').textContent).toBe('Schedule Manager');
+      expect(scheduleView.getByTestId('schedule-manager-title').textContent).toBe('Operating hours');
     });
 
     expect(listMock).toHaveBeenCalledTimes(1);
