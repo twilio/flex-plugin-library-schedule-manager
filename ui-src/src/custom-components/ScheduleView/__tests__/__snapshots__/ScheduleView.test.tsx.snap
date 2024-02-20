@@ -6,18 +6,59 @@ exports[`ScheduleView component renders correct data loaded from serverless 1`] 
   "baseElement": <body>
     <div>
       <div
-        class="css-jj8pus"
+        class="css-zylmng"
       >
         <div
-          class="css-1vctvoz"
+          class="css-b3ml4e"
         >
           <h3
             class="css-n8ur01"
             data-paste-element="HEADING"
             data-testid="schedule-manager-title"
           >
-            Operating hours
+            Schedule manager
           </h3>
+          <div
+            class="schedule-manager-info-text css-1xorfws"
+            data-paste-element="BOX"
+          >
+            <div
+              data-testid="disclosure"
+            >
+              <div
+                data-testid="disclosure-heading"
+              >
+                Setting up open and closed hours
+              </div>
+              <div
+                data-testid="disclosure-content"
+              >
+                <ul
+                  class="css-17dge34"
+                  data-paste-element="UNORDERED_LIST"
+                >
+                  <li
+                    class="css-1t0yrln"
+                    data-paste-element="LIST_ITEM"
+                  >
+                    Create a schedule for each team of agents that operate in the same hours.
+                  </li>
+                  <li
+                    class="css-1t0yrln"
+                    data-paste-element="LIST_ITEM"
+                  >
+                    A schedule is a collection of rules. A rule can define when the contact center is open, like: Open Monday - Friday 8am - 5pm every week. Or closed, like: Closed December 25th every year.
+                  </li>
+                  <li
+                    class="css-1t0yrln"
+                    data-paste-element="LIST_ITEM"
+                  >
+                    Rule are processed in the order in which they are listed in the schedule.
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </div>
         <div
           class="css-12nie3k"
@@ -74,18 +115,59 @@ exports[`ScheduleView component renders correct data loaded from serverless 1`] 
   </body>,
   "container": <div>
     <div
-      class="css-jj8pus"
+      class="css-zylmng"
     >
       <div
-        class="css-1vctvoz"
+        class="css-b3ml4e"
       >
         <h3
           class="css-n8ur01"
           data-paste-element="HEADING"
           data-testid="schedule-manager-title"
         >
-          Operating hours
+          Schedule manager
         </h3>
+        <div
+          class="schedule-manager-info-text css-1xorfws"
+          data-paste-element="BOX"
+        >
+          <div
+            data-testid="disclosure"
+          >
+            <div
+              data-testid="disclosure-heading"
+            >
+              Setting up open and closed hours
+            </div>
+            <div
+              data-testid="disclosure-content"
+            >
+              <ul
+                class="css-17dge34"
+                data-paste-element="UNORDERED_LIST"
+              >
+                <li
+                  class="css-1t0yrln"
+                  data-paste-element="LIST_ITEM"
+                >
+                  Create a schedule for each team of agents that operate in the same hours.
+                </li>
+                <li
+                  class="css-1t0yrln"
+                  data-paste-element="LIST_ITEM"
+                >
+                  A schedule is a collection of rules. A rule can define when the contact center is open, like: Open Monday - Friday 8am - 5pm every week. Or closed, like: Closed December 25th every year.
+                </li>
+                <li
+                  class="css-1t0yrln"
+                  data-paste-element="LIST_ITEM"
+                >
+                  Rule are processed in the order in which they are listed in the schedule.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
       <div
         class="css-12nie3k"

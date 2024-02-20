@@ -17,6 +17,7 @@ import { SortableList } from '../common/Sortable/SortableList';
 import { RuleDragHandle } from './RuleDragHandle';
 import { RulesContainer } from '../ScheduleView/ScheduleViewStyles';
 import { analytics, Event } from '../../utils/Analytics';
+import { Manager } from '@twilio/flex-ui';
 
 interface OwnProps {
   onPanelClosed: () => void;
@@ -255,7 +256,7 @@ const ScheduleEditor = (props: OwnProps) => {
             state={{ ...state }}
             helpText={ScheduleManagerStrings[StringTemplates.RULES_TEXT]}
           />
-          <RulesContainer>
+          <RulesContainer isLight={Manager.getInstance().store.getState().flex.config?.theme?.isLight}>
             <Box as="h4">{ScheduleManagerStrings[StringTemplates.SCHEDULE_RULES_HEADING]}</Box>
             <SortableList
               items={rules}

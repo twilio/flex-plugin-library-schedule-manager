@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ColumnDefinition, DataTable } from '@twilio/flex-ui';
+import { ColumnDefinition, DataTable, Manager } from '@twilio/flex-ui';
 import { Button } from '@twilio-paste/core/button';
 import { Box } from '@twilio-paste/core/box';
 import { PlusIcon } from '@twilio-paste/icons/cjs/PlusIcon';
@@ -195,7 +195,7 @@ const ScheduleDataTable = (props: OwnProps) => {
             {ScheduleManagerStrings[StringTemplates.CREATE_SCHEDULE_BUTTON]}
           </Button>
         </Box>
-        <TableContainer>
+        <TableContainer isLight={Manager.getInstance().store.getState().flex.config?.theme?.isLight}>
           <DataTable items={props.schedules} isLoading={props.isLoading} defaultSortColumn="name-column">
             <ColumnDefinition
               key="name-column"

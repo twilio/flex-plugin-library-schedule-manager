@@ -123,10 +123,14 @@ export enum StringTemplates {
   CANCEL_PUBLISHING_TEXT4 = 'SchMgrCancelPublishingText4',
   DONT_FORGET_TO_PUBLISH = 'SchMgrDontForgetToPublish',
   SUCCESFULLY_PUBLISHED_CHANGES = 'SchMgrSuccesfullyPublishedChanges',
+  INFO_SECTION_HEADER = 'SchMgrInfoSectionHeader',
+  INFO_SECTION_DESC_TEXT1 = `SchMgrInfoSectionDescText1`,
+  INFO_SECTION_DESC_TEXT2 = `SchMgrInfoSectionDescText2`,
+  INFO_SECTION_DESC_TEXT3 = `SchMgrInfoSectionDescText3`
 }
 
 export default {
-  [StringTemplates.SCHEDULE_MANAGER_TITLE]: 'Operating hours',
+  [StringTemplates.SCHEDULE_MANAGER_TITLE]: 'Schedule manager',
   [StringTemplates.PUBLISH_ABORTED]: 'The schedule publish was aborted. Your changes may not have been saved.',
   [StringTemplates.PUBLISH_INFLIGHT]:
     'Another schedule publish is in progress. Publishing now will overwrite other changes.',
@@ -254,4 +258,11 @@ export default {
   [StringTemplates.NOTPUBLISHED]: 'Not Published',
   [StringTemplates.DONT_FORGET_TO_PUBLISH]: "Don't forget to publish your changes",
   [StringTemplates.SUCCESFULLY_PUBLISHED_CHANGES]: 'You successfully published all the changes.',
+  [StringTemplates.INFO_SECTION_HEADER]: 'Setting up open and closed hours',
+  [StringTemplates.INFO_SECTION_DESC_TEXT1]:
+    'Create a schedule for each team of agents that operate in the same hours.',
+  [StringTemplates.INFO_SECTION_DESC_TEXT2]:
+    'A schedule is a collection of rules. A rule can define when the contact center is open, like: Open Monday - Friday 8am - 5pm every week. Or closed, like: Closed December 25th every year.',
+  [StringTemplates.INFO_SECTION_DESC_TEXT3]:
+    'Rule are processed in the order in which they are listed in the schedule.',
 };

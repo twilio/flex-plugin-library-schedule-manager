@@ -7,6 +7,9 @@ jest.mock('@twilio-paste/core', () => {
   return {
     ...jest.requireActual('@twilio-paste/core'),
     Toaster: () => <div data-testid="toaster"></div>,
+    Disclosure: ({ children }: { children: React.ReactNode }) => <div data-testid="disclosure">{children}</div>,
+    DisclosureContent: ({ children }: { children: React.ReactNode }) => <div data-testid="disclosure-content">{children}</div>,
+    DisclosureHeading: ({ children }: { children: React.ReactNode }) => <div data-testid="disclosure-heading">{children}</div>
   };
 });
 
@@ -47,7 +50,7 @@ describe('ScheduleView component', () => {
     const scheduleView = render(<ScheduleView />);
     await waitFor(() => {
       expect(scheduleView).toMatchSnapshot();
-      expect(scheduleView.getByTestId('schedule-manager-title').textContent).toBe('Operating hours');
+      expect(scheduleView.getByTestId('schedule-manager-title').textContent).toBe('Schedule manager');
     });
 
     expect(listMock).toHaveBeenCalledTimes(1);

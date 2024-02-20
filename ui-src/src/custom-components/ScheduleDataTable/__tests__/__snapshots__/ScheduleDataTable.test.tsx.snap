@@ -48,7 +48,7 @@ exports[`<ScheduleDataTable> should render component 1`] = `
     </button>
   </div>
   <div
-    className="css-1fha43i"
+    className="css-uqsw9g"
   />
 </div>
 `;
