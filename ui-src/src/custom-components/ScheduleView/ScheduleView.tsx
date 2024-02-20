@@ -1,6 +1,6 @@
 /* eslint-disable no-empty-pattern */
 import React, { useEffect, useState } from 'react';
-import { Notifications, Tab, Tabs } from '@twilio/flex-ui';
+import { Manager, Notifications, Tab, Tabs, withTheme } from '@twilio/flex-ui';
 import { Button } from '@twilio-paste/core/button';
 import { Heading } from '@twilio-paste/core/heading';
 import { Modal, ModalBody } from '@twilio-paste/core/modal';
@@ -23,7 +23,7 @@ import { Rule, Schedule } from '../../types/schedule-manager';
 import { loadScheduleData, publishSchedules } from '../../utils/schedule-manager';
 import { NotificationIds } from '../../flex-hooks/notifications/ScheduleManager';
 import ScheduleManagerStrings, { StringTemplates } from '../../flex-hooks/strings/ScheduleManager';
-import { Box, Callout, CalloutHeading, CalloutText, Toaster, useToaster } from '@twilio-paste/core';
+import { Box, Callout, CalloutHeading, CalloutText, Disclosure, DisclosureContent, DisclosureHeading, ListItem, Toaster, UnorderedList, useToaster } from '@twilio-paste/core';
 
 const ScheduleView = ({}) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -133,11 +133,26 @@ const ScheduleView = ({}) => {
   };
 
   return (
-    <ScheduleViewWrapper>
+    <ScheduleViewWrapper isLight={Manager.getInstance().store.getState().flex.config?.theme?.isLight}>
       <ScheduleViewHeader>
         <Heading as="h3" variant="heading30" marginBottom="space0" data-testid="schedule-manager-title">
           {ScheduleManagerStrings[StringTemplates.SCHEDULE_MANAGER_TITLE]}
         </Heading>
+        <Box marginTop={'space30'} className="schedule-manager-info-text">
+          <Disclosure>
+            <DisclosureHeading as="h2" variant="heading50">
+              {ScheduleManagerStrings[StringTemplates.INFO_SECTION_HEADER]}
+            </DisclosureHeading>
+            <DisclosureContent>
+              <UnorderedList>
+                <ListItem>{ScheduleManagerStrings[StringTemplates.INFO_SECTION_DESC_TEXT1]}</ListItem>
+                <ListItem>{ScheduleManagerStrings[StringTemplates.INFO_SECTION_DESC_TEXT2]}</ListItem>
+                <ListItem>{ScheduleManagerStrings[StringTemplates.INFO_SECTION_DESC_TEXT3]}</ListItem>
+              </UnorderedList>
+            </DisclosureContent>
+          </Disclosure>
+        </Box>
+
         {isChangesPresent && (
           <Callout variant="warning" marginY={'space40'}>
             <CalloutHeading as="h2">{ScheduleManagerStrings[StringTemplates.UNPUBLISHED_CHANGES]}</CalloutHeading>
@@ -150,7 +165,7 @@ const ScheduleView = ({}) => {
         )}
       </ScheduleViewHeader>
       <Tabs
-        key="operating-hours-tabs"
+        key="schedule-manager-tabs"
         selectedTabName={selectedTabName}
         onTabSelected={(tabName) => setSelectedTabName(tabName)}
       >

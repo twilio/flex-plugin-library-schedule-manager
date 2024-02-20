@@ -49,7 +49,7 @@ exports[`<RuleDataTable> should render component 1`] = `
           </button>
         </div>
         <div
-          class="css-1fha43i"
+          class="css-uqsw9g"
         />
       </div>
     </div>
@@ -99,7 +99,7 @@ exports[`<RuleDataTable> should render component 1`] = `
         </button>
       </div>
       <div
-        class="css-1fha43i"
+        class="css-uqsw9g"
       />
     </div>
   </div>,
